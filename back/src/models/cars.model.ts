@@ -9,7 +9,18 @@ const CarsSchema = new Schema({
     boughtInWeek: {type: Number, default: 0},
     priceInWeek: {type: Number, default: 0},
     batteryPercent: {type: Number, required: true},
-    balance: {type: Number, default: 0}
+    balance: {type: Number, default: 0},
+    history: {
+        type: Array,
+        of: {
+            volume: {type: Number},
+            price: {type: Number},
+            lastWeek: {type: Number},
+            bonus: {type: Number},
+            amount: {type: Number},
+            totalAmount: {type: Number}
+        }
+    }
 });
 
 const Cars = mongoose.model('cars', CarsSchema);
