@@ -2,8 +2,9 @@ import fastify from "fastify";
 import connect from "./mongoose";
 import fastifyEnv from '@fastify/env';
 import AdminsController from "./modules/auth/auth.controller";
+import CarsController from "./modules/cars/cars.controller";
 
-const app = fastify({logger: true});
+const app = fastify();
 
 const schema = {
     type: 'object',
@@ -31,6 +32,7 @@ async function setup() {
     
     await connect();
     app.register(AdminsController);
+    app.register(CarsController);
     await app.ready()
     const PORT: any = process.env.PORT;
     
