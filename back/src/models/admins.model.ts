@@ -1,21 +1,24 @@
-import mongoose, {Schema} from "mongoose";
-import * as bcrypt from 'bcrypt';
+// admins-model.ts - A mongoose model
+//
+// See http://mongoosejs.com/docs/models.html
+// for more of what you can do here.
+import {Application} from '../declarations';
+import {Model, Mongoose} from 'mongoose';
 
-const admins = new Schema({
-    login: {type: String, required: true},
-    password: {type: String, required: true}
-});
+export default function (app: Application): Model<any> {
+    const modelName = 'admins';
+    const mongooseClient: Mongoose = app.get('mongooseClient');
+    const schema = new mongooseClient.Schema({
+        login: {type: String, unique: true},
+        password: {type: String},
+    }, {
+        timestamps: true
+    });
 
-admins.pre('save', async function (next) {
-    const admin = this;
-    
-    if (admin?.password) {
-        admin.password = await bcrypt.hash(admin.password, 16);
+    // This is necessary to avoid model compilation errors in watch mode
+    // see https://mongoosejs.com/docs/api/connection.html#connection_Connection-deleteModel
+    if (mongooseClient.modelNames().includes(modelName)) {
+        (mongooseClient as any).deleteModel(modelName);
     }
-
-    next();
-});
-
-const Admins = mongoose.model('admins', admins);
-
-export default Admins;
+    return mongooseClient.model<any>(modelName, schema);
+}

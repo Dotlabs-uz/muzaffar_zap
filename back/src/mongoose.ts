@@ -1,12 +1,14 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
+import {Application} from './declarations';
+import logger from './logger';
 
-async function connect() {
-    const MONGO_URI: any = process.env.MONGO_URI;
-    
-    mongoose.connect(MONGO_URI).catch(err => {
-        console.log(err);
+export default function (app: Application): void {
+    mongoose.connect(
+        app.get('mongodb')
+    ).catch(err => {
+        logger.error(err);
         process.exit(1);
-    })
-}
+    });
 
-export default connect;
+    app.set('mongooseClient', mongoose);
+}
