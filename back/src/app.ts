@@ -8,7 +8,7 @@ import feathers, {HookContext as FeathersHookContext} from '@feathersjs/feathers
 import configuration from '@feathersjs/configuration';
 import express from '@feathersjs/express';
 import socketio from '@feathersjs/socketio';
-
+import swagger, {swaggerUI} from 'feathers-swagger';
 
 import {Application} from './declarations';
 import logger from './logger';
@@ -46,6 +46,19 @@ app.configure(mongoose);
 // Configure other middleware (see `middleware/index.ts`)
 app.configure(middleware);
 app.configure(authentication);
+app.configure(swagger({
+    docsPath: '/docs',
+    ui: swaggerUI({}),
+    specs: {
+        info: {
+            title: 'A test',
+            description: 'A description',
+            version: '1.0.0'
+        },
+        schemas: ['http', 'https']
+    }
+}));
+
 // Set up our services (see `services/index.ts`)
 app.configure(services);
 // Set up event channels (see channels.ts)
