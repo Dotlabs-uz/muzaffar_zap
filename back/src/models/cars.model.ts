@@ -15,7 +15,7 @@ export default function (app: Application): Model<any> {
         phoneNumber: {type: String, required: true},
         type: {type: Number, enum: [0, 1, 2], required: true},
         boughtInWeek: {type: Number, default: 0},
-        batteryPercent: {type: Number, required: true},
+        batteryPercent: {type: Number, required: false, default: 0},
         bonus: {type: Number, default: 0},
         boughtInWeekVolume: {type: Number, default: 0},
         history: {
