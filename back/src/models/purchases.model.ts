@@ -11,7 +11,9 @@ export default function (app: Application): Model<any> {
     const {Schema} = mongooseClient;
     const schema = new Schema({
         volume: {type: String},
-        price: {type: String}
+        price: {type: String},
+        autoNumber: {type: String},
+        method: {type: Number, enum: [0, 1]}
     }, {
         timestamps: true
     });
