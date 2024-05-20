@@ -10,10 +10,10 @@ export default function (app: Application): Model<any> {
     const mongooseClient: Mongoose = app.get('mongooseClient');
     const {Schema} = mongooseClient;
     const schema = new Schema({
-        volume: {type: String},
-        price: {type: String},
-        autoNumber: {type: String},
-        column: {type: Number},
+        volume: {type: Number, required: true},
+        price: {type: Number, required: true},
+        autoNumber: {type: String, required: true},
+        column: {type: Number, enum: [1, 2, 3, 4, 5, 6, 7, 8], required: true},
         method: {type: Number, enum: [0, 1], default: 0}
     }, {
         timestamps: true

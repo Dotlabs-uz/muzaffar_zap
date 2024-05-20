@@ -10,22 +10,23 @@ export default function (app: Application): Model<any> {
     const mongooseClient: Mongoose = app.get('mongooseClient');
     const {Schema} = mongooseClient;
     const schema = new Schema({
-        autoNumber: {type: String, required: true, maxLength: 8},
+        autoNumber: {type: String, required: true},
         fullName: {type: String, required: true},
         phoneNumber: {type: String, required: true},
         type: {type: Number, enum: [0, 1, 2], required: true},
-        status: {type: Number, enum: [0, 1, 2], required: true},
         boughtInWeek: {type: Number, default: 0},
-        priceInWeek: {type: Number, default: 0},
         batteryPercent: {type: Number, required: true},
-        balance: {type: Number, default: 0},
         bonus: {type: Number, default: 0},
         history: {
             type: Array,
             of: {
                 volume: {type: Number},
                 price: {type: Number},
-                column: {type: Number, enum: [1, 2, 3, 4, 5, 6, 7, 8]}
+                column: {type: Number, enum: [1, 2, 3, 4, 5, 6, 7, 8]},
+                createdAt: {
+                    type: Date,
+                    default: Date.now
+                }
             }
         }
     }, {
