@@ -19,17 +19,46 @@ import {
 } from "@/components/ui/resizable"
 import Modal from '@/components/Modal';
 import axios from 'axios';
+import restClient from '@/feathers';
 
 const Form = ({ token }: any) => {
     const { register, handleSubmit, formState: { errors }, } = useForm();
     const [openModal, setOpenModal] = useState(false);
     const [cars, setCars] = useState<any>([]);
+    const [search, setSearch] = useState<string>("300");
+
+    const regex = new RegExp(search, "gi")
 
     const onSubmit = async (data: any) => {
-        // axios
-
         console.log(data);
     };
+
+    useEffect(() => {
+        restClient.service('cars').find({
+            query: {
+                autoNumber: {
+                    $regex: regex
+                }
+            }
+        }).then(r => console.log(r));
+        axios.get("http://localhost:3030/cars",
+            {
+                headers: {
+                    Authorization: token,
+                },
+                params: {
+                    autoNumber: {
+                        $regex: search,
+                        $options: 'i'
+                    }
+                }
+            }
+        ).then((res) => {
+            if (res.status === 200 || res.status === 200) {
+                console.log(res.data);
+            }
+        })
+    }, [search])
 
     useEffect(() => {
         axios.get("http://localhost:3030/cars",
@@ -58,6 +87,7 @@ const Form = ({ token }: any) => {
                     <Input
                         type="text"
                         autoComplete='off'
+                        onVolumeChange={(e: any) => setSearch(e.target.value)}
                         className={`max-w-3xl py-5 bg-[#242424] text-white ${errors.numberCar && "border border-[red] outline-[red]"}`}
                         {...register("numberCar", { pattern: /\d{2}\s?(?:[A-Za-z]\s\d{3}|\d{3})\s?[A-Za-z]{2,3}/g, required: true })}
                     />

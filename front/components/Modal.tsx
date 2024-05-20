@@ -28,34 +28,28 @@ const Modal = ({ setOpenModal }: any) => {
     const form = useForm()
 
     const onSubmit = async (data: any) => {
-        console.log(data);
-
-        // axios.post("http://localhost:3030/cars", data)
-        //     .then((res) => {
-        //         if (res.status === 200 || res.status === 201) {
-        //             console.log(res.data);
-        //         }
-        //     })
-        //     .catch((err) => {
-        //         console.log(err);
-        //     })
+        axios.post("http://localhost:3030/cars", data)
+            .then((res) => {
+                if (res.status === 200 || res.status === 201) {
+                    console.log(res.data);
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+            })
     };
 
     return (
         <div onClick={() => setOpenModal(false)} className='fixed top-0 left-0 h-screen w-full bg-black/30 backdrop-blur-sm z-50'>
-            <div onClick={(e) => e.stopPropagation()} onSubmit={handleSubmit(onSubmit)} className="max-w-lg w-full absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 px-8 py-9 rounded-lg bg-white">
+            <div onClick={(e) => e.stopPropagation()} className="max-w-lg w-full absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 px-8 py-9 rounded-lg bg-white">
                 <div className="flex items-center justify-between mb-5">
                     <p className='text-2xl font-medium'>Added Car</p>
                     <button onClick={() => setOpenModal(false)} type='button'>Закрыть</button>
                 </div>
 
-                {/* <Form {...form}> */}
+                <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                        <input type="text" {...reg} />
-                        <input type="text" />
-                        <input type="text" />
-                        <input type="text" />
-                        {/* <FormField
+                        <FormField
                             control={form.control}
                             name="autoNumber"
                             render={({ field }) => (
@@ -127,9 +121,9 @@ const Modal = ({ setOpenModal }: any) => {
                                 </FormItem>
                             )}
                         />
-                        <Button type='submit' className='w-full mt-3'>Создать</Button> */}
+                        <Button type='submit' className='w-full mt-3'>Создать</Button>
                     </form>
-                {/* </Form> */}
+                </Form>
 
             </div>
         </div>
