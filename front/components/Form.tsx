@@ -23,8 +23,8 @@ import axios from 'axios';
 const Form = ({ token }: any) => {
     const { register, handleSubmit, formState: { errors }, } = useForm();
     const [openModal, setOpenModal] = useState(false);
-    const [cars, setCars] = useState<any>();
-    console.log(cars);
+    const [cars, setCars] = useState<any>([]);
+    // console.log(cars);
 
     const onSubmit = async (data: any) => {
         // axios
@@ -36,14 +36,14 @@ const Form = ({ token }: any) => {
         axios.get("http://localhost:3030/cars",
             {
                 headers: {
-                    "Content-Type": token,
-                },
+                    Authorization: token,
+                }
             }
         )
             .then((res) => {
                 if (res.status === 200 || res.status === 201) {
-                    // console.log(res.data.data);
-                    setCars(res.data.data);
+                    console.log(res.data.data);
+                    // setCars(res.data.data);
                 }
             })
     }, [])
@@ -79,7 +79,7 @@ const Form = ({ token }: any) => {
                                 </TableRow>
                             </TableHeader>
                             <TableBody className='radius'>
-                                {
+                                {/* {
                                     cars.map((i: any, idx: number) => (
                                         <TableRow key={idx} className='border-none cursor-pointer'>
                                             <TableCell className="font-medium text-center rounded-l-lg">{idx + 1}</TableCell>
@@ -90,7 +90,7 @@ const Form = ({ token }: any) => {
                                             <TableCell className="text-right rounded-r-lg">{i.fullName}</TableCell>
                                         </TableRow>
                                     ))
-                                }
+                                } */}
                             </TableBody>
                         </Table>
                     </ResizablePanel>
