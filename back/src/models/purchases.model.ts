@@ -13,6 +13,7 @@ export default function (app: Application): Model<any> {
         volume: {type: String},
         price: {type: String},
         autoNumber: {type: String},
+        column: {type: Number},
         method: {type: Number, enum: [0, 1], default: 0}
     }, {
         timestamps: true

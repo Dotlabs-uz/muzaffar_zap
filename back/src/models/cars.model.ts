@@ -19,15 +19,13 @@ export default function (app: Application): Model<any> {
         priceInWeek: {type: Number, default: 0},
         batteryPercent: {type: Number, required: true},
         balance: {type: Number, default: 0},
+        bonus: {type: Number, default: 0},
         history: {
             type: Array,
             of: {
                 volume: {type: Number},
                 price: {type: Number},
-                lastWeek: {type: Number},
-                bonus: {type: Number},
-                amount: {type: Number},
-                totalAmount: {type: Number}
+                column: {type: Number, enum: [1, 2, 3, 4, 5, 6, 7, 8]}
             }
         }
     }, {
