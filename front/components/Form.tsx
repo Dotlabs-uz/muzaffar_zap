@@ -20,45 +20,39 @@ import {
 import Modal from '@/components/Modal';
 import axios from 'axios';
 import restClient from '@/feathers';
+import { getCookie } from 'cookies-next';
+
+type Inputs = {
+    autoNumber: string;
+    column: number
+    volume: number
+    price: number
+};
 
 const Form = ({ token }: any) => {
-    const { register, handleSubmit, formState: { errors }, } = useForm();
+    const { register, handleSubmit, formState: { errors }, } = useForm<Inputs>();
     const [openModal, setOpenModal] = useState(false);
     const [cars, setCars] = useState<any>([]);
-    const [search, setSearch] = useState<string>("300");
-
-    const regex = new RegExp(search, "gi")
+    const [search, setSearch] = useState<string>("");
 
     const onSubmit = async (data: any) => {
-        console.log(data);
-    };
+        data = {
+            ...data, 
+            volume: Number(data.volume),
+            column: Number(data.column),
+            price: Number(data.price)
+        }
+        console.log(data, "dede");
 
-    useEffect(() => {
-        restClient.service('cars').find({
-            query: {
-                autoNumber: {
-                    $regex: regex
-                }
-            }
-        }).then(r => console.log(r));
-        axios.get("http://localhost:3030/cars",
-            {
-                headers: {
-                    Authorization: token,
-                },
-                params: {
-                    autoNumber: {
-                        $regex: search,
-                        $options: 'i'
-                    }
-                }
-            }
-        ).then((res) => {
-            if (res.status === 200 || res.status === 200) {
-                console.log(res.data);
+        axios.post("http://localhost:3030/purchases", data, {
+            headers: {
+                Authorization: token
             }
         })
-    }, [search])
+            .then((res) => {
+                console.log(res);
+            })
+    };
 
     useEffect(() => {
         axios.get("http://localhost:3030/cars",
@@ -88,8 +82,8 @@ const Form = ({ token }: any) => {
                         type="text"
                         autoComplete='off'
                         onVolumeChange={(e: any) => setSearch(e.target.value)}
-                        className={`max-w-3xl py-5 bg-[#242424] text-white ${errors.numberCar && "border border-[red] outline-[red]"}`}
-                        {...register("numberCar", { pattern: /\d{2}\s?(?:[A-Za-z]\s\d{3}|\d{3})\s?[A-Za-z]{2,3}/g, required: true })}
+                        className={`max-w-3xl py-5 bg-[#242424] text-white ${errors.autoNumber && "border border-[red] outline-[red]"}`}
+                        {...register("autoNumber", { pattern: /\d{2}\s?(?:[A-Za-z]\s\d{3}|\d{3})\s?[A-Za-z]{2,3}/g, required: true })}
                     />
                     <Button onClick={() => setOpenModal(true)} type='button' className="bg-green-700 hover:bg-green-600 text-2xl h-11">+</Button>
                 </div>
@@ -138,25 +132,25 @@ const Form = ({ token }: any) => {
                                 }
                             </ul>
                             <div className="grid grid-cols-1 gap-2">
-                                <label className={`radio-btn cursor-pointer ${errors.type && "animate-pulse"}`}>
-                                    <input value={"Такси"} type="radio" {...register("type", { required: true })} name="type" className={`hidden-radio ${errors.type && "animate-pulse"}`} />
+                                <label className={`radio-btn cursor-pointer ${errors.volume && "animate-pulse"}`}>
+                                    <input value={1} type="radio" {...register("volume", { required: true })} className={`hidden-radio ${errors.volume && "animate-pulse"}`} />
                                     <span>Такси</span>
                                 </label>
-                                <label className={`radio-btn cursor-pointer ${errors.type && "animate-pulse"}`}>
-                                    <input value={"Грузовые"} type="radio" {...register("type", { required: true })} name="type" className={`hidden-radio ${errors.type && "animate-pulse"}`} />
+                                <label className={`radio-btn cursor-pointer ${errors.volume && "animate-pulse"}`}>
+                                    <input value={2} type="radio" {...register("volume", { required: true })} className={`hidden-radio ${errors.volume && "animate-pulse"}`} />
                                     <span>Грузовые</span>
                                 </label>
-                                <label className={`radio-btn cursor-pointer ${errors.type && "animate-pulse"}`}>
-                                    <input value={"Продать"} type="radio" {...register("type", { required: true })} name="type" className={`hidden-radio ${errors.type && "animate-pulse"}`} />
-                                    <span>Продать</span>
+                                <label className={`radio-btn cursor-pointer ${errors.volume && "animate-pulse"}`}>
+                                    <input value={0} type="radio" {...register("volume", { required: true })} className={`hidden-radio ${errors.volume && "animate-pulse"}`} />
+                                    <span>Обычная</span>
                                 </label>
                             </div>
                             <div className="flex flex-col">
                                 <div className="flex flex-col gap-2 h-[55%]">
                                     <Input
                                         type="number"
-                                        {...register("kub", { required: true })}
-                                        className={`w-full h-full text-2xl px-5 bg-[#242424] text-white ${errors.kub && "border-[red] outline-[red]"}`}
+                                        {...register("price", { required: true })}
+                                        className={`w-full h-full text-2xl px-5 bg-[#242424] text-white ${errors.price && "border-[red] outline-[red]"}`}
                                         placeholder="Kub"
                                     />
 
