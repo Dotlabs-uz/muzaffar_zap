@@ -1,5 +1,6 @@
 "use client"
 import { useForm } from 'react-hook-form'
+import axios from 'axios';
 import { Input } from './ui/input'
 import { Button } from './ui/button'
 import {
@@ -20,13 +21,22 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form"
+import { useEffect } from 'react';
 
 const Modal = ({ setOpenModal }: any) => {
     const { register, handleSubmit, formState: { errors }, } = useForm();
     const form = useForm()
 
-    const onSubmit = (data: any) => {
-        console.log(data);
+    const onSubmit = async (data: any) => {
+        axios.post("http://localhost:3030/cars", data)
+            .then((res) => {
+                if (res.status === 200 || res.status === 201) {
+                    console.log(res.data);
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+            })
     };
 
     return (
@@ -38,10 +48,10 @@ const Modal = ({ setOpenModal }: any) => {
                 </div>
 
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                         <FormField
                             control={form.control}
-                            name="numberCar"
+                            name="autoNumber"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormControl>
@@ -51,9 +61,10 @@ const Modal = ({ setOpenModal }: any) => {
                                 </FormItem>
                             )}
                         />
+
                         <FormField
                             control={form.control}
-                            name="name"
+                            name="fullName"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormControl>
@@ -63,9 +74,10 @@ const Modal = ({ setOpenModal }: any) => {
                                 </FormItem>
                             )}
                         />
+
                         <FormField
                             control={form.control}
-                            name="numberPhone"
+                            name="phoneNumber"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormControl>
@@ -75,6 +87,20 @@ const Modal = ({ setOpenModal }: any) => {
                                 </FormItem>
                             )}
                         />
+
+                        <FormField
+                            control={form.control}
+                            name="batteryPercent"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormControl>
+                                        <Input {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
                         <FormField
                             control={form.control}
                             name="type"
@@ -87,8 +113,9 @@ const Modal = ({ setOpenModal }: any) => {
                                             </SelectTrigger>
                                         </FormControl>
                                         <SelectContent>
-                                            <SelectItem value="Такси">Такси</SelectItem>
-                                            <SelectItem value="Грузовые">Грузовые</SelectItem>
+                                            <SelectItem value="0">Другое</SelectItem>
+                                            <SelectItem value="1">Такси</SelectItem>
+                                            <SelectItem value="2">Грузовые</SelectItem>
                                         </SelectContent>
                                     </Select>
                                 </FormItem>
