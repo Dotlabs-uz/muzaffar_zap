@@ -17,6 +17,7 @@ export default function (app: Application): Model<any> {
         boughtInWeek: {type: Number, default: 0},
         batteryPercent: {type: Number, required: true},
         bonus: {type: Number, default: 0},
+        boughtInWeekVolume: {type: Number, default: 0},
         history: {
             type: Array,
             of: {
