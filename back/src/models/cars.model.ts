@@ -13,7 +13,7 @@ export default function (app: Application): Model<any> {
         autoNumber: {type: String, required: true, maxLength: 8},
         fullName: {type: String, required: true},
         phoneNumber: {type: String, required: true},
-        type: {type: Number, enum: [0, 1], required: true},
+        type: {type: Number, enum: [0, 1, 2], required: true},
         status: {type: Number, enum: [0, 1, 2], required: true},
         boughtInWeek: {type: Number, default: 0},
         priceInWeek: {type: Number, default: 0},
