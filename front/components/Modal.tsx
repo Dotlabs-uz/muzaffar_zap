@@ -28,15 +28,17 @@ const Modal = ({ setOpenModal }: any) => {
     const form = useForm()
 
     const onSubmit = async (data: any) => {
-        axios.post("http://localhost:3030/cars", data)
-            .then((res) => {
-                if (res.status === 200 || res.status === 201) {
-                    console.log(res.data);
-                }
-            })
-            .catch((err) => {
-                console.log(err);
-            })
+        console.log(data);
+
+        // axios.post("http://localhost:3030/cars", data)
+        //     .then((res) => {
+        //         if (res.status === 200 || res.status === 201) {
+        //             console.log(res.data);
+        //         }
+        //     })
+        //     .catch((err) => {
+        //         console.log(err);
+        //     })
     };
 
     return (
@@ -47,9 +49,13 @@ const Modal = ({ setOpenModal }: any) => {
                     <button onClick={() => setOpenModal(false)} type='button'>Закрыть</button>
                 </div>
 
-                <Form {...form}>
+                {/* <Form {...form}> */}
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                        <FormField
+                        <input type="text" {...reg} />
+                        <input type="text" />
+                        <input type="text" />
+                        <input type="text" />
+                        {/* <FormField
                             control={form.control}
                             name="autoNumber"
                             render={({ field }) => (
@@ -121,9 +127,9 @@ const Modal = ({ setOpenModal }: any) => {
                                 </FormItem>
                             )}
                         />
-                        <Button type='submit' className='w-full mt-3'>Создать</Button>
+                        <Button type='submit' className='w-full mt-3'>Создать</Button> */}
                     </form>
-                </Form>
+                {/* </Form> */}
 
             </div>
         </div>
