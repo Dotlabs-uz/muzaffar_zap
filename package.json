@@ -1,5 +1,0 @@
-{
-  "dependencies": {
-    "@feathersjs/rest-client": "^5.0.25"
-  }
-}
