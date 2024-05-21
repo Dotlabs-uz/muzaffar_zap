@@ -1,5 +1,6 @@
 "use client"
 import { useForm } from 'react-hook-form'
+import axios from 'axios';
 import { Input } from './ui/input'
 import { Button } from './ui/button'
 import {
@@ -20,28 +21,37 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form"
+import { useEffect } from 'react';
 
 const Modal = ({ setOpenModal }: any) => {
     const { register, handleSubmit, formState: { errors }, } = useForm();
     const form = useForm()
 
-    const onSubmit = (data: any) => {
-        console.log(data);
+    const onSubmit = async (data: any) => {
+        axios.post("http://localhost:3030/cars", data)
+            .then((res) => {
+                if (res.status === 200 || res.status === 201) {
+                    console.log(res.data);
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+            })
     };
 
     return (
         <div onClick={() => setOpenModal(false)} className='fixed top-0 left-0 h-screen w-full bg-black/30 backdrop-blur-sm z-50'>
-            <div onClick={(e) => e.stopPropagation()} onSubmit={handleSubmit(onSubmit)} className="max-w-lg w-full absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 px-8 py-9 rounded-lg bg-white">
+            <div onClick={(e) => e.stopPropagation()} className="max-w-lg w-full absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 px-8 py-9 rounded-lg bg-white">
                 <div className="flex items-center justify-between mb-5">
                     <p className='text-2xl font-medium'>Added Car</p>
                     <button onClick={() => setOpenModal(false)} type='button'>Закрыть</button>
                 </div>
 
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                         <FormField
                             control={form.control}
-                            name="numberCar"
+                            name="autoNumber"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormControl>
@@ -51,9 +61,10 @@ const Modal = ({ setOpenModal }: any) => {
                                 </FormItem>
                             )}
                         />
+
                         <FormField
                             control={form.control}
-                            name="name"
+                            name="fullName"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormControl>
@@ -63,9 +74,10 @@ const Modal = ({ setOpenModal }: any) => {
                                 </FormItem>
                             )}
                         />
+
                         <FormField
                             control={form.control}
-                            name="numberPhone"
+                            name="phoneNumber"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormControl>
@@ -75,6 +87,20 @@ const Modal = ({ setOpenModal }: any) => {
                                 </FormItem>
                             )}
                         />
+
+                        <FormField
+                            control={form.control}
+                            name="batteryPercent"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormControl>
+                                        <Input {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
                         <FormField
                             control={form.control}
                             name="type"
@@ -87,8 +113,9 @@ const Modal = ({ setOpenModal }: any) => {
                                             </SelectTrigger>
                                         </FormControl>
                                         <SelectContent>
-                                            <SelectItem value="Такси">Такси</SelectItem>
-                                            <SelectItem value="Грузовые">Грузовые</SelectItem>
+                                            <SelectItem value="0">Другое</SelectItem>
+                                            <SelectItem value="1">Такси</SelectItem>
+                                            <SelectItem value="2">Грузовые</SelectItem>
                                         </SelectContent>
                                     </Select>
                                 </FormItem>
