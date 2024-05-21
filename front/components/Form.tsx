@@ -1,6 +1,8 @@
 "use client"
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form';
+import { zodResolver } from "@hookform/resolvers/zod"
+import { z } from "zod"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import {
@@ -19,8 +21,7 @@ import {
 } from "@/components/ui/resizable"
 import Modal from '@/components/Modal';
 import axios from 'axios';
-import restClient from '@/feathers';
-import { getCookie } from 'cookies-next';
+import ReactInputMask from 'react-input-mask';
 
 type Inputs = {
     autoNumber: string;
@@ -29,63 +30,103 @@ type Inputs = {
     price: number
 };
 
+const formSchema = z.object({
+    volume: z.number(),
+    price: z.number(),
+    autoNumber: z.string().min(8).max(8),
+    column: z.number()
+})
+
 const Form = ({ token }: any) => {
-    const { register, handleSubmit, formState: { errors }, } = useForm<Inputs>();
+    const { register, handleSubmit, reset, formState: { errors }, } = useForm<Inputs>();
     const [openModal, setOpenModal] = useState(false);
     const [cars, setCars] = useState<any>([]);
     const [search, setSearch] = useState<string>("");
+    const [changeKub, setChangeKub] = useState(0);
+    const sum = changeKub * 5000
+    const carNumberRegex = /\b(\d{1,2}[A-Z]\d{3}[A-Z]{2}|\d{5}[A-Z]{3})\b/g;
 
-    const onSubmit = async (data: any) => {
+    const form = useForm<z.infer<typeof formSchema>>({
+        resolver: zodResolver(formSchema),
+        defaultValues: {
+            volume: undefined,
+            price: undefined,
+            autoNumber: "",
+            column: undefined
+        },
+    })
+
+    function onSubmit(data: z.infer<typeof formSchema>) {
         data = {
-            ...data, 
+            ...data,
             volume: Number(data.volume),
             column: Number(data.column),
             price: Number(data.price)
         }
-        console.log(data, "dede");
 
         axios.post("http://localhost:3030/purchases", data, {
             headers: {
                 Authorization: token
             }
+        }).then((res) => {
+            if (res.status === 200 || res.status === 201) {
+                setSearch("")
+                reset()
+                reset({
+                    autoNumber: ""
+                })
+                setChangeKub(0)
+            }
         })
-            .then((res) => {
-                console.log(res);
-            })
     };
 
     useEffect(() => {
         axios.get("http://localhost:3030/cars",
             {
                 headers: {
-                    Authorization: token,
+                    Authorization: token
+                },
+                params: {
+                    autoNumber: {
+                        $regex: search,
+                        $options: 'i'
+                    }
                 }
             }
-        )
-            .then((res) => {
-                if (res.status === 200 || res.status === 201) {
-                    setCars(res.data.data);
-                }
-            })
-    }, [])
+        ).then((res) => {
+            if (res.status === 200 || res.status === 201) {
+                setCars(res.data.data);
+                console.log(res);
+            }
+        })
+    }, [search])
 
     return (
         <div className="px-3 h-screen pt-3 pb-5 w-full flex flex-col bg-black">
             {
                 openModal && (
-                    <Modal setOpenModal={setOpenModal} />
+                    <Modal setOpenModal={setOpenModal} token={token} />
                 )
             }
             <form className='flex flex-col h-full' onSubmit={handleSubmit(onSubmit)}>
                 <div className="w-full flex items-center justify-center gap-5 pt-9 pb-5 rounded-lg bg-[#121212]">
                     <Input
-                        type="text"
                         autoComplete='off'
-                        onVolumeChange={(e: any) => setSearch(e.target.value)}
-                        className={`max-w-3xl py-5 bg-[#242424] text-white ${errors.autoNumber && "border border-[red] outline-[red]"}`}
-                        {...register("autoNumber", { pattern: /\d{2}\s?(?:[A-Za-z]\s\d{3}|\d{3})\s?[A-Za-z]{2,3}/g, required: true })}
+                        maxLength={8}
+                        onKeyUp={(e: any) => setSearch(e.target.value)}
+                        className={`max-w-3xl py-5 text-xl bg-[#242424] text-white ${errors.autoNumber && "border border-[red] outline-[red]"}`}
+                        {...register("autoNumber", { required: true })}
                     />
-                    <Button onClick={() => setOpenModal(true)} type='button' className="bg-green-700 hover:bg-green-600 text-2xl h-11">+</Button>
+                    {
+                        !cars[0] ?
+                            <Button
+                                onClick={() => setOpenModal(true)}
+                                type='button'
+                                className="bg-green-700 hover:bg-green-600 text-2xl h-11"
+                            >+</Button>
+                            :
+                            null
+                    }
                 </div>
                 <ResizablePanelGroup direction="vertical" className="mt-3 text-white">
                     <ResizablePanel className='scroll h-fit p-4 mb-4 rounded-lg bg-[#121212]'>
@@ -103,7 +144,7 @@ const Form = ({ token }: any) => {
                             <TableBody className='radius'>
                                 {
                                     cars.map((i: any, idx: number) => (
-                                        <TableRow key={idx} className='border-none cursor-pointer'>
+                                        <TableRow key={idx} onClick={() => reset({ autoNumber: i.autoNumber })} className='border-none cursor-pointer'>
                                             <TableCell className="font-medium text-center rounded-l-lg">{idx + 1}</TableCell>
                                             <TableCell className="font-medium">{i.autoNumber}</TableCell>
                                             <TableCell>{i.batteryPercent}</TableCell>
@@ -149,6 +190,7 @@ const Form = ({ token }: any) => {
                                 <div className="flex flex-col gap-2 h-[55%]">
                                     <Input
                                         type="number"
+                                        onKeyUpCapture={(e: any) => setChangeKub(+e.target.value)}
                                         {...register("price", { required: true })}
                                         className={`w-full h-full text-2xl px-5 bg-[#242424] text-white ${errors.price && "border-[red] outline-[red]"}`}
                                         placeholder="Kub"
@@ -156,8 +198,8 @@ const Form = ({ token }: any) => {
 
                                     <Input
                                         className="w-full h-full text-2xl px-5 bg-[#242424] text-white"
-                                        type="number"
-                                        defaultValue={"10 000"}
+                                        type="text"
+                                        defaultValue={"5 000"}
                                         placeholder="Sum"
                                     />
 
@@ -165,6 +207,7 @@ const Form = ({ token }: any) => {
                                         className="w-full h-full text-2xl px-5 bg-[#242424] text-white"
                                         type="number"
                                         placeholder="Sum"
+                                        defaultValue={sum}
                                     />
                                 </div>
                                 <div className="h-[45%] w-full">
