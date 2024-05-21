@@ -17,7 +17,8 @@ export default function (app: Application): void {
         Model: createModel(app),
         paginate: app.get('paginate'),
         lean: true,
-        multi: true
+        multi: true,
+        whitelist: ['$regex', '$options']
     };
 
     // Initialize our service with any options it requires
