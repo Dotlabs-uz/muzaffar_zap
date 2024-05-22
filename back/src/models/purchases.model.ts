@@ -2,19 +2,19 @@
 //
 // See http://mongoosejs.com/docs/models.html
 // for more of what you can do here.
-import {Application} from '../declarations';
-import {Model, Mongoose} from 'mongoose';
+import { Application } from '../declarations';
+import { Model, Mongoose } from 'mongoose';
 
 export default function (app: Application): Model<any> {
     const modelName = 'purchases';
     const mongooseClient: Mongoose = app.get('mongooseClient');
-    const {Schema} = mongooseClient;
+    const { Schema } = mongooseClient;
     const schema = new Schema({
-        volume: {type: Number, required: true},
-        price: {type: Number, required: true},
-        autoNumber: {type: String, required: true},
-        column: {type: Number, enum: [1, 2, 3, 4, 5, 6, 7, 8], required: true},
-        method: {type: Number, enum: [0, 1], default: 0}
+        volume: { type: Number, required: true },
+        price: { type: Number, required: true },
+        autoNumber: { type: String, required: true },
+        column: { type: Number, enum: [1, 2, 3, 4, 5, 6, 7, 8], required: true },
+        method: { type: Number, enum: [0, 1], default: 0 }
     }, {
         timestamps: true
     });
