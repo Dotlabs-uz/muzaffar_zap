@@ -14,7 +14,7 @@ export default {
         get: [],
         create: [
             iff((context: HookContext) => context.data.isTaxi && !context.data?.useBonus, countBonus()),
-            iff((context: HookContext) => context.data.useBonus, discountBonus()),
+            iff((context: HookContext) => context.data?.useBonus, discountBonus()),
             async (context: HookContext) => {
                 const data = context.data;
                 const history = {

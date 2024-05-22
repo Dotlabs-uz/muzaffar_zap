@@ -1,15 +1,17 @@
 import {HookContext} from '@feathersjs/feathers';
+import app from '../app';
+import carsModel from '../models/cars.model';
 
 export default function () {
     return async (context: HookContext) => {
-        const car = await context.app.service('cars').get(null, {query: {autoNumber: context.data.autoNumber}});
+        const car = await carsModel(app).findOne({query: {autoNumber: context.data.autoNumber}}).exec();
 
         if (context.data.price < car.bonus) {
             car.bonus = car.bonus - context.data.price;
             context.data.price = 0;
         } else {
-            car.bonus = 0;
             context.data.price = context.data.price - car.bonus;
+            car.bonus = 0;
         }
 
         await context.app.service('cars').patch(null, {
