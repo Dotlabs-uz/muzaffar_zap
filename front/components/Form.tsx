@@ -73,7 +73,7 @@ const Form = ({ token }: any) => {
             column: Number(data.column),
             price: changePrice,
             isTaxi: data.isTaxi === "1",
-            useBonuse: payWithBonus
+            useBonus: payWithBonus
         }
 
         axios.post("http://localhost:3030/purchases", sendData, {
@@ -252,7 +252,7 @@ const Form = ({ token }: any) => {
                                     </div> */}
 
                                     <Button disabled={isPending} onClick={() => setPayWithBonus(false)} type='submit' className="bg-green-700 hover:bg-green-600 w-full text-lg h-11">{changePrice.toLocaleString()}</Button>
-                                    <Button disabled={isPending || bonus == 0} onClick={() => setPayWithBonus(true)} type='submit' className="bg-green-700 hover:bg-green-600 w-full text-lg h-11">{changePrice - bonus}</Button>
+                                    <Button disabled={isPending || bonus == 0} onClick={() => setPayWithBonus(true)} type='submit' className="bg-green-700 hover:bg-green-600 w-full text-lg h-11">{changeKub ? bonus > changePrice ? changePrice : changePrice - bonus : "0"}</Button>
                                 </div>
                             </div>
                         </div>
