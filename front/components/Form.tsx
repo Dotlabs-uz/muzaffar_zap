@@ -19,22 +19,26 @@ import {
     ResizablePanel,
     ResizablePanelGroup,
 } from "@/components/ui/resizable"
+import { Label } from "@/components/ui/label"
+import { Switch } from "@/components/ui/switch"
 import Modal from '@/components/Modal';
 import axios from 'axios';
 import ReactInputMask from 'react-input-mask';
 
 type Inputs = {
     autoNumber: string;
-    column: number
-    volume: number
-    price: number
+    column: string
+    volume: string
+    price: string
+    isTaxi: string
 };
 
 const formSchema = z.object({
-    volume: z.number(),
-    price: z.number(),
+    volume: z.string(),
+    price: z.string(),
     autoNumber: z.string().min(8).max(8),
-    column: z.number()
+    column: z.string(),
+    isTaxi: z.string()
 })
 
 const Form = ({ token }: any) => {
@@ -42,29 +46,38 @@ const Form = ({ token }: any) => {
     const [openModal, setOpenModal] = useState(false);
     const [cars, setCars] = useState<any>([]);
     const [search, setSearch] = useState<string>("");
+    const [bonus, setBonus] = useState(0);
     const [changeKub, setChangeKub] = useState(0);
-    const sum = changeKub * 5000
-    const carNumberRegex = /\b(\d{1,2}[A-Z]\d{3}[A-Z]{2}|\d{5}[A-Z]{3})\b/g;
+    const [changePrice, setChangePrice] = useState(0);
+    const [payWithBonus, setPayWithBonus] = useState(false);
 
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
-        defaultValues: {
-            volume: undefined,
-            price: undefined,
-            autoNumber: "",
-            column: undefined
-        },
-    })
+    // const carNumberRegex = /\b(\d{1,2}[A-Z]\d{3}[A-Z]{2}|\d{5}[A-Z]{3})\b/g;
+
+    // const form = useForm<z.infer<typeof formSchema>>({
+    //     resolver: zodResolver(formSchema),
+    //     defaultValues: {
+    //         volume: "",
+    //         price: "",
+    //         autoNumber: "",
+    //         column: "",
+    //         isTaxi: ""
+    //     },
+    // })
 
     function onSubmit(data: z.infer<typeof formSchema>) {
-        data = {
+        console.log(data);
+        
+        
+        const sendData = {
             ...data,
             volume: Number(data.volume),
             column: Number(data.column),
-            price: Number(data.price)
+            price: changePrice,
+            isTaxi: data.isTaxi === "1",
+            useBonuse: payWithBonus
         }
 
-        axios.post("http://localhost:3030/purchases", data, {
+        axios.post("http://localhost:3030/purchases", sendData, {
             headers: {
                 Authorization: token
             }
@@ -76,6 +89,8 @@ const Form = ({ token }: any) => {
                     autoNumber: ""
                 })
                 setChangeKub(0)
+                setChangePrice(0)
+                setBonus(0)
             }
         })
     };
@@ -100,6 +115,11 @@ const Form = ({ token }: any) => {
             }
         })
     }, [search])
+
+    function changeKubFn(v: number) {
+        setChangeKub(v)
+        setChangePrice((v * 5000))
+    }
 
     return (
         <div className="px-3 h-screen pt-3 pb-5 w-full flex flex-col bg-black">
@@ -144,7 +164,7 @@ const Form = ({ token }: any) => {
                             <TableBody className='radius'>
                                 {
                                     cars.map((i: any, idx: number) => (
-                                        <TableRow key={idx} onClick={() => reset({ autoNumber: i.autoNumber })} className='border-none cursor-pointer'>
+                                        <TableRow key={idx} onClick={() => { reset({ autoNumber: i.autoNumber }), setBonus(i.boughtInWeek) }} className='border-none cursor-pointer'>
                                             <TableCell className="font-medium text-center rounded-l-lg">{idx + 1}</TableCell>
                                             <TableCell className="font-medium">{i.autoNumber}</TableCell>
                                             <TableCell>{i.batteryPercent}</TableCell>
@@ -173,16 +193,16 @@ const Form = ({ token }: any) => {
                                 }
                             </ul>
                             <div className="grid grid-cols-1 gap-2">
-                                <label className={`radio-btn cursor-pointer ${errors.volume && "animate-pulse"}`}>
-                                    <input value={1} type="radio" {...register("volume", { required: true })} className={`hidden-radio ${errors.volume && "animate-pulse"}`} />
+                                <label className={`radio-btn cursor-pointer ${errors.isTaxi && "animate-pulse"}`}>
+                                    <input value={"1"} type="radio" {...register("isTaxi", { required: true })} className={`hidden-radio ${errors.isTaxi && "animate-pulse"}`} />
                                     <span>Такси</span>
                                 </label>
                                 <label className={`radio-btn cursor-pointer ${errors.volume && "animate-pulse"}`}>
-                                    <input value={2} type="radio" {...register("volume", { required: true })} className={`hidden-radio ${errors.volume && "animate-pulse"}`} />
+                                    <input value={"1"} type="radio" {...register("isTaxi", { required: true })} className={`hidden-radio ${errors.isTaxi && "animate-pulse"}`} />
                                     <span>Грузовые</span>
                                 </label>
                                 <label className={`radio-btn cursor-pointer ${errors.volume && "animate-pulse"}`}>
-                                    <input value={0} type="radio" {...register("volume", { required: true })} className={`hidden-radio ${errors.volume && "animate-pulse"}`} />
+                                    <input value={"0"} type="radio" {...register("isTaxi", { required: true })} className={`hidden-radio ${errors.isTaxi && "animate-pulse"}`} />
                                     <span>Обычная</span>
                                 </label>
                             </div>
@@ -190,15 +210,18 @@ const Form = ({ token }: any) => {
                                 <div className="flex flex-col gap-2 h-[55%]">
                                     <Input
                                         type="number"
-                                        onKeyUpCapture={(e: any) => setChangeKub(+e.target.value)}
-                                        {...register("price", { required: true })}
+                                        onKeyUpCapture={(e: any) => changeKubFn(+e.target.value)}
+                                        {...register("volume", { required: true })}
                                         className={`w-full h-full text-2xl px-5 bg-[#242424] text-white ${errors.price && "border-[red] outline-[red]"}`}
                                         placeholder="Kub"
+                                        defaultValue={changeKub}
+
                                     />
 
                                     <Input
                                         className="w-full h-full text-2xl px-5 bg-[#242424] text-white"
                                         type="text"
+                                        // onKeyUpCapture={(e: any) => changePriceFn(+e.target.value)}
                                         defaultValue={"5 000"}
                                         placeholder="Sum"
                                     />
@@ -206,12 +229,14 @@ const Form = ({ token }: any) => {
                                     <Input
                                         className="w-full h-full text-2xl px-5 bg-[#242424] text-white"
                                         type="number"
+                                        // onKeyUpCapture={(e: any) => changePriceFn(+e.target.value)}
+                                        {...register("price", { required: true })}
                                         placeholder="Sum"
-                                        defaultValue={sum}
+                                        value={changePrice}
                                     />
                                 </div>
-                                <div className="h-[45%] w-full">
-                                    <div className="flex items-center justify-between mt-5">
+                                <div className="h-fit w-full flex gap-3 items-center justify-between mt-5">
+                                    {/* <div className="flex items-center justify-between mt-5">
                                         <p className="text-nowrap text-lg font-medium">Цена:</p>
                                         <hr className="w-[55%] border-dashed border-1 border-white" />
                                         <p className="text-nowrap">100 000 Sum</p>
@@ -220,16 +245,16 @@ const Form = ({ token }: any) => {
                                         <p className="text-nowrap text-lg font-medium">Количество:</p>
                                         <hr className="w-[55%] border-dashed border-1 border-white" />
                                         <p>10 шт</p>
-                                    </div>
-
-                                    <Button type='submit' className="bg-green-700 hover:bg-green-600 text-lg h-11 mt-5">Submit</Button>
+                                    </div> */}
+                                    <Button onClick={()=> setPayWithBonus(false)} type='submit' className="bg-green-700 hover:bg-green-600 w-full text-lg h-11">{changePrice.toLocaleString()}</Button>
+                                    <Button onClick={()=> setPayWithBonus(true)} type='submit' disabled={bonus == 0} className="bg-green-700 hover:bg-green-600 w-full text-lg h-11">{changePrice - bonus}</Button>
                                 </div>
                             </div>
                         </div>
                     </ResizablePanel>
                 </ResizablePanelGroup>
-            </form >
-        </div >
+            </form>
+        </div>
     )
 }
 
