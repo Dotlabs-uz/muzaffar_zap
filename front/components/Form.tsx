@@ -157,7 +157,8 @@ const Form = ({ token }: any) => {
                                     <TableHead className="w-[100px] text-center">numbers</TableHead>
                                     <TableHead className="w-[180px]">Номер машины</TableHead>
                                     <TableHead>Status</TableHead>
-                                    <TableHead>Тип</TableHead>
+                                    {/* <TableHead>Bonus</TableHead> */}
+                                    <TableHead>Сумма бонуса</TableHead>
                                     <TableHead>Номер</TableHead>
                                     <TableHead className="text-right">Имя</TableHead>
                                 </TableRow>
@@ -170,6 +171,7 @@ const Form = ({ token }: any) => {
                                             <TableCell className="font-medium">{i.autoNumber}</TableCell>
                                             <TableCell>{i.batteryPercent}</TableCell>
                                             <TableCell>{i.bonus}</TableCell>
+                                            {/* <TableCell>{i.boughtInWeek}</TableCell> */}
                                             <TableCell>{i.phoneNumber}</TableCell>
                                             <TableCell className="text-right rounded-r-lg">{i.fullName}</TableCell>
                                         </TableRow>
