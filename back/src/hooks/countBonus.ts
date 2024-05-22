@@ -25,19 +25,10 @@ export default function () {
 
         data.bonus = bonus;
 
-        const history = {
-            volume: data.volume,
-            price: data.price,
-            column: data.column
-        };
-
         await context.app.service('cars').patch(null, {
             bonus: bonus,
             boughtInWeek: sumPrice,
             boughtInWeekVolume: sumVolume,
-            $push: {
-                history: history
-            }
         }, {query: {autoNumber: data.autoNumber}});
     };
 }

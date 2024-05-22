@@ -11,7 +11,26 @@ export default {
         all: [authenticate('jwt')],
         find: [],
         get: [],
-        create: [iff((context: HookContext) => context.data.isTaxi, countBonus())],
+        create: [iff((context: HookContext) => context.data.isTaxi && !context.data.useBonus, countBonus()),
+            iff((context: HookContext) => context.data.isTaxi && context.data.useBonus, async (context: HookContext) => {
+                await context.app.service('cars').patch(null, {
+                    bonus: 0
+                }, {query: {autoNumber: context.data.autoNumber}});
+            }),
+            async (context: HookContext) => {
+                const data = context.data;
+                const history = {
+                    volume: data.volume,
+                    price: data.price,
+                    column: data.column
+                };
+
+                await context.app.service('cars').patch(null, {
+                    $push: {
+                        history: history
+                    }
+                }, {query: {autoNumber: data.autoNumber}});
+            }],
         update: [],
         patch: [],
         remove: []
