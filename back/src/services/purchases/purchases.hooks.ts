@@ -2,21 +2,19 @@ import {HookContext} from '@feathersjs/feathers';
 import {iff} from 'feathers-hooks-common';
 import countBonus from '../../hooks/countBonus';
 import * as authentication from '@feathersjs/authentication';
+import discountBonus from "../../hooks/discountBonus";
 // Don't remove this comment. It's needed to format import lines nicely.
 
 const {authenticate} = authentication.hooks;
 
 export default {
     before: {
-        all: [authenticate('jwt')],
+        all: [],
         find: [],
         get: [],
-        create: [iff((context: HookContext) => context.data.isTaxi && !context.data.useBonus, countBonus()),
-            iff((context: HookContext) => context.data.isTaxi && context.data.useBonus, async (context: HookContext) => {
-                await context.app.service('cars').patch(null, {
-                    bonus: 0
-                }, {query: {autoNumber: context.data.autoNumber}});
-            }),
+        create: [
+            iff((context: HookContext) => context.data.isTaxi && !context.data?.useBonus, countBonus()),
+            iff((context: HookContext) => context.data.useBonus, discountBonus()),
             async (context: HookContext) => {
                 const data = context.data;
                 const history = {
@@ -30,7 +28,8 @@ export default {
                         history: history
                     }
                 }, {query: {autoNumber: data.autoNumber}});
-            }],
+            }
+        ],
         update: [],
         patch: [],
         remove: []
