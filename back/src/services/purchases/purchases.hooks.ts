@@ -9,7 +9,7 @@ const {authenticate} = authentication.hooks;
 
 export default {
     before: {
-        all: [],
+        all: [authenticate('jwt')],
         find: [],
         get: [],
         create: [

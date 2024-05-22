@@ -10,15 +10,13 @@ export default function () {
         const sevenDaysAgo = new Date();
         sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
-        console.log(context.data.autoNumber);
-
         const purchases = await context.app.service('purchases').find({
             query: {
                 autoNumber: context.data.autoNumber,
                 createdAt: {$gte: sevenDaysAgo}
             }
         });
-        console.log(purchases.data);
+
         const sumVolume = purchases.data.reduce((acc: number, curr: any) => acc + +curr.volume, 0);
         const sumPrice = purchases.data.reduce((acc: number, curr: any) => acc + +curr.price, 0);
 

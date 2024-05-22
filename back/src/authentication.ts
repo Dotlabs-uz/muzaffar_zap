@@ -12,11 +12,17 @@ declare module './declarations' {
 }
 
 export default function (app: Application): void {
-    const authentication = new AuthenticationService(app);
+    const authenticationOperators = new AuthenticationService(app, 'authentication-operators');
+    const authenticationAdmins = new AuthenticationService(app, 'authentication-admins');
 
-    authentication.register('jwt', new JWTStrategy());
-    authentication.register('local', new LocalStrategy());
+    authenticationAdmins.register('jwt', new JWTStrategy());
+    authenticationAdmins.register('local', new LocalStrategy());
 
-    app.use('/authentication', authentication);
+    authenticationOperators.register('jwt', new JWTStrategy());
+    authenticationOperators.register('local', new LocalStrategy());
+
+    app.use('/authentication/operators', authenticationOperators);
+    app.use('/authentication/admins', authenticationAdmins);
+
     app.configure(expressOauth());
 }

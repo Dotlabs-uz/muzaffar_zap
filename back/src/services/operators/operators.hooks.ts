@@ -7,13 +7,13 @@ const {hashPassword, protect} = local.hooks;
 
 export default {
     before: {
-        all: [],
-        find: [authenticate({strategies: ['jwt'], service: 'authentication/admins'})],
-        get: [authenticate({strategies: ['jwt'], service: 'authentication/admins'})],
+        all: [authenticate({strategies: ['jwt'], service: '/authentication/admins'})],
+        find: [],
+        get: [],
         create: [hashPassword('password')],
-        update: [hashPassword('password'), authenticate({strategies: ['jwt'], service: 'authentication/admins'})],
-        patch: [hashPassword('password'), authenticate({strategies: ['jwt'], service: 'authentication/admins'})],
-        remove: [authenticate('jwt')]
+        update: [hashPassword('password')],
+        patch: [hashPassword('password')],
+        remove: []
     },
 
     after: {
