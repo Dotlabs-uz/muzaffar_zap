@@ -3,6 +3,7 @@ import admins from './admins/admins.service';
 import cars from './cars/cars.service';
 import purchases from './purchases/purchases.service';
 import config from './config/config.service';
+import reports from './reports/reports.service';
 // Don't remove this comment. It's needed to format import lines nicely.
 
 export default function (app: Application): void {
@@ -10,4 +11,5 @@ export default function (app: Application): void {
     app.configure(cars);
     app.configure(purchases);
     app.configure(config);
+    app.configure(reports);
 }
