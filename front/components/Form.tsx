@@ -43,6 +43,7 @@ const formSchema = z.object({
 
 const Form = ({ token }: any) => {
     const { register, handleSubmit, reset, formState: { errors }, } = useForm<Inputs>();
+    const [isPending, setIsPending] = useState(false);
     const [openModal, setOpenModal] = useState(false);
     const [cars, setCars] = useState<any>([]);
     const [search, setSearch] = useState<string>("");
@@ -65,9 +66,7 @@ const Form = ({ token }: any) => {
     // })
 
     function onSubmit(data: z.infer<typeof formSchema>) {
-        console.log(data);
-        
-        
+        setIsPending(true)
         const sendData = {
             ...data,
             volume: Number(data.volume),
@@ -91,6 +90,7 @@ const Form = ({ token }: any) => {
                 setChangeKub(0)
                 setChangePrice(0)
                 setBonus(0)
+                setIsPending(false)
             }
         })
     };
@@ -133,6 +133,7 @@ const Form = ({ token }: any) => {
                     <Input
                         autoComplete='off'
                         maxLength={8}
+                        disabled={isPending}
                         onKeyUp={(e: any) => setSearch(e.target.value)}
                         className={`max-w-3xl py-5 text-xl bg-[#242424] text-white ${errors.autoNumber && "border border-[red] outline-[red]"}`}
                         {...register("autoNumber", { required: true })}
@@ -185,7 +186,7 @@ const Form = ({ token }: any) => {
                                     [0, 1, 2, 3, 4, 5, 6, 7].map((i: number) => (
                                         <li key={i}>
                                             <label className={`radio-btn cursor-pointer ${errors.column && "animate-pulse"}`}>
-                                                <input type="radio" {...register("column", { required: true })} name="column" value={i + 1} className="hidden-radio" />
+                                                <input disabled={isPending} type="radio" {...register("column", { required: true })} name="column" value={i + 1} className="hidden-radio" />
                                                 <span>{i + 1}</span>
                                             </label>
                                         </li>
@@ -194,15 +195,15 @@ const Form = ({ token }: any) => {
                             </ul>
                             <div className="grid grid-cols-1 gap-2">
                                 <label className={`radio-btn cursor-pointer ${errors.isTaxi && "animate-pulse"}`}>
-                                    <input value={"1"} type="radio" {...register("isTaxi", { required: true })} className={`hidden-radio ${errors.isTaxi && "animate-pulse"}`} />
+                                    <input disabled={isPending} value={"1"} type="radio" {...register("isTaxi", { required: true })} className={`hidden-radio ${errors.isTaxi && "animate-pulse"}`} />
                                     <span>Такси</span>
                                 </label>
                                 <label className={`radio-btn cursor-pointer ${errors.volume && "animate-pulse"}`}>
-                                    <input value={"1"} type="radio" {...register("isTaxi", { required: true })} className={`hidden-radio ${errors.isTaxi && "animate-pulse"}`} />
+                                    <input disabled={isPending} value={"1"} type="radio" {...register("isTaxi", { required: true })} className={`hidden-radio ${errors.isTaxi && "animate-pulse"}`} />
                                     <span>Грузовые</span>
                                 </label>
                                 <label className={`radio-btn cursor-pointer ${errors.volume && "animate-pulse"}`}>
-                                    <input value={"0"} type="radio" {...register("isTaxi", { required: true })} className={`hidden-radio ${errors.isTaxi && "animate-pulse"}`} />
+                                    <input disabled={isPending} value={"0"} type="radio" {...register("isTaxi", { required: true })} className={`hidden-radio ${errors.isTaxi && "animate-pulse"}`} />
                                     <span>Обычная</span>
                                 </label>
                             </div>
@@ -214,8 +215,8 @@ const Form = ({ token }: any) => {
                                         {...register("volume", { required: true })}
                                         className={`w-full h-full text-2xl px-5 bg-[#242424] text-white ${errors.price && "border-[red] outline-[red]"}`}
                                         placeholder="Kub"
+                                        disabled={isPending}
                                         defaultValue={changeKub}
-
                                     />
 
                                     <Input
@@ -229,6 +230,7 @@ const Form = ({ token }: any) => {
                                     <Input
                                         className="w-full h-full text-2xl px-5 bg-[#242424] text-white"
                                         type="number"
+                                        disabled={isPending}
                                         // onKeyUpCapture={(e: any) => changePriceFn(+e.target.value)}
                                         {...register("price", { required: true })}
                                         placeholder="Sum"
@@ -246,8 +248,9 @@ const Form = ({ token }: any) => {
                                         <hr className="w-[55%] border-dashed border-1 border-white" />
                                         <p>10 шт</p>
                                     </div> */}
-                                    <Button onClick={()=> setPayWithBonus(false)} type='submit' className="bg-green-700 hover:bg-green-600 w-full text-lg h-11">{changePrice.toLocaleString()}</Button>
-                                    <Button onClick={()=> setPayWithBonus(true)} type='submit' disabled={bonus == 0} className="bg-green-700 hover:bg-green-600 w-full text-lg h-11">{changePrice - bonus}</Button>
+
+                                    <Button disabled={isPending} onClick={() => setPayWithBonus(false)} type='submit' className="bg-green-700 hover:bg-green-600 w-full text-lg h-11">{changePrice.toLocaleString()}</Button>
+                                    <Button disabled={isPending || bonus == 0} onClick={() => setPayWithBonus(true)} type='submit' className="bg-green-700 hover:bg-green-600 w-full text-lg h-11">{changePrice - bonus}</Button>
                                 </div>
                             </div>
                         </div>
