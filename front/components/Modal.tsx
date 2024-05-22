@@ -30,11 +30,23 @@ const formSchema = z.object({
     autoNumber: z.string().min(8).max(8),
     fullName: z.string().min(1),
     phoneNumber: z.string().min(17),
-    type: z.string().min(1, {
-        message: "ewew"
-
-    }),
+    type: z.string().min(1,),
 })
+
+const typesButtonArr = [
+    {
+        id: 0,
+        title: "Другое"
+    },
+    {
+        id: 1,
+        title: "Такси"
+    },
+    {
+        id: 2,
+        title: "Грузовые"
+    }
+]
 
 const Modal = ({ setOpenModal, token }: any) => {
     const [loading, setLoading] = useState(false);
@@ -50,8 +62,14 @@ const Modal = ({ setOpenModal, token }: any) => {
     })
 
     function onSubmit(values: z.infer<typeof formSchema>) {
+        const data = {
+            ...values,
+            type: +values.type
+        }
+
+
         setLoading(true)
-        axios.post("http://localhost:3030/cars", values, {
+        axios.post("http://localhost:3030/cars", data, {
             headers: {
                 Authorization: token
             }
@@ -61,7 +79,7 @@ const Modal = ({ setOpenModal, token }: any) => {
                     autoNumber: "",
                     fullName: "",
                     phoneNumber: "",
-                    type: ""
+                    type: undefined
                 })
                 setOpenModal(false)
                 setLoading(false)
@@ -77,7 +95,7 @@ const Modal = ({ setOpenModal, token }: any) => {
             <div onClick={(e) => e.stopPropagation()} className="max-w-lg w-full absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 px-8 py-9 rounded-lg bg-white">
                 <div className="flex items-center justify-between mb-5">
                     <p className='text-2xl font-medium'>Added Car</p>
-                    <button onClick={() => setOpenModal(false)} type='button'>Закрыть</button>
+                    <Button onClick={() => setOpenModal(false)} type='button'>Закрыть</Button>
                 </div>
 
                 <Form {...form}>
@@ -144,9 +162,11 @@ const Modal = ({ setOpenModal, token }: any) => {
                                             </SelectTrigger>
                                         </FormControl>
                                         <SelectContent>
-                                            <SelectItem value="0">Другое</SelectItem>
-                                            <SelectItem value="1">Такси</SelectItem>
-                                            <SelectItem value="2">Грузовые</SelectItem>
+                                            {
+                                                typesButtonArr.map(item => (
+                                                    <SelectItem key={item.id} value={`${item.id}`}>{item.title}</SelectItem>
+                                                ))
+                                            }
                                         </SelectContent>
                                     </Select>
                                 </FormItem>

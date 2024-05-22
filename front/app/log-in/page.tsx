@@ -12,9 +12,8 @@ type Inputs = {
 };
 
 const Login: React.FC = () => {
-    const { push } = useRouter()
-
     const { register, handleSubmit, formState: { errors } } = useForm<Inputs>();
+    const { push } = useRouter()
 
     const onSubmit: SubmitHandler<Inputs> = (data) => {
         axios.post("http://localhost:3030/authentication", { ...data, strategy: 'local' })
@@ -26,10 +25,8 @@ const Login: React.FC = () => {
                     push("/dashboard")
                 }
             }).catch(err => console.log(err))
-        // github_4
-        // ozodbek_shukurov
-
-        // console.log('Submitted password:', { ...data, strategy: 'local' });
+        // github_4             password
+        // ozodbek_shukurov     log in
     };
 
     return (
