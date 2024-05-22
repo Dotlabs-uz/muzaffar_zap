@@ -11,6 +11,7 @@ export default function () {
         sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
         const purchases = await context.app.service('purchases').find({
+            autoNumber: context.data.autoNumber,
             createdAt: {$gte: sevenDaysAgo}
         });
 
