@@ -18,7 +18,6 @@ export default function () {
         });
 
         const sumVolume = purchases.data.reduce((acc: number, curr: any) => acc + +curr.volume, 0);
-        const sumPrice = purchases.data.reduce((acc: number, curr: any) => acc + +curr.price, 0);
 
         let bonus = 0;
 
@@ -28,18 +27,20 @@ export default function () {
 
         const price = data.price / 100 * bonus;
 
-        data.history = {
+        const history = {
+            volume: data.volume,
+            price: data.price,
+            column: data.column,
+            bonusPrice: price,
             allVolume: sumVolume,
-            bonusPercent: bonus,
-            bonusPrice: price
+            bonusPercent: bonus
         };
 
         await context.app.service('cars').patch(null, {
-            $inc: {
-                bonus: price
+            $push: {
+                history: history
             },
-            boughtInWeek: sumPrice,
-            boughtInWeekVolume: sumVolume,
+            bonus: bonus
         }, {query: {autoNumber: data.autoNumber}});
     };
 }

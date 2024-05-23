@@ -14,18 +14,16 @@ export default function (app: Application): Model<any> {
         fullName: {type: String, required: true},
         phoneNumber: {type: String, required: true},
         type: {type: Number, enum: [0, 1, 2], required: true},
-        boughtInWeek: {type: Number, default: 0},
         batteryPercent: {type: Number, required: false, default: 0},
         bonus: {type: Number, default: 0},
-        boughtInWeekVolume: {type: Number, default: 0},
         history: {
             type: Array,
             of: {
                 volume: {type: Number, required: true},
                 price: {type: Number, required: true},
                 column: {type: Number, enum: [1, 2, 3, 4, 5, 6, 7, 8]},
-                bonusPercent: {type: Number, required: true},
-                bonusPrice: {type: Number, required: true},
+                bonusPercent: {type: Number, required: true, default: 0},
+                bonusPrice: {type: Number, required: true, default: 0},
                 allVolume: {type: Number, required: true},
                 createdAt: {
                     type: Date,

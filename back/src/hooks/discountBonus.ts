@@ -5,6 +5,7 @@ import carsModel from '../models/cars.model';
 export default function () {
     return async (context: HookContext) => {
         const car = await carsModel(app).findOne({query: {autoNumber: context.data.autoNumber}}).exec();
+        const {data} = context;
 
         if (context.data.price < car.bonus) {
             car.bonus = car.bonus - context.data.price;
@@ -14,8 +15,32 @@ export default function () {
             car.bonus = 0;
         }
 
+        const sevenDaysAgo = new Date();
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+        const purchases = await context.app.service('purchases').find({
+            query: {
+                autoNumber: context.data.autoNumber,
+                createdAt: {$gte: sevenDaysAgo}
+            }
+        });
+
+        const sumVolume = purchases.data.reduce((acc: number, curr: any) => acc + +curr.volume, 0);
+
+        const history = {
+            volume: data.volume,
+            price: data.price,
+            column: data.column,
+            bonusPrice: 0,
+            allVolume: sumVolume,
+            bonusPercent: 0
+        };
+
         await context.app.service('cars').patch(null, {
-            bonus: car.bonus
+            bonus: car.bonus,
+            $push: {
+                history: history
+            }
         }, {query: {autoNumber: context.data.autoNumber}});
     };
 }
