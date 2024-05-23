@@ -18,8 +18,8 @@ const page = async ({ params: { id } }: { params: { id: string } }) => {
                         <TableHead className="w-[180px]">Номер машины</TableHead>
                         <TableHead>Status</TableHead>
                         <TableHead>Сумма бонуса</TableHead>
-                        <TableHead>Номер</TableHead>
-                        <TableHead className="text-right">Имя</TableHead>
+                        <TableHead>Номер водителя</TableHead>
+                        <TableHead className="text-right">Имя водителя</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody className='radius'>
@@ -36,14 +36,14 @@ const page = async ({ params: { id } }: { params: { id: string } }) => {
             <Table className="mt-10">
                 <TableHeader>
                     <TableRow className='border-b hover:bg-transparent select-none border-white/20'>
-                        <TableHead className="w-[180px]">Дату</TableHead>
-                        <TableHead>Куб.Метров</TableHead>
+                        <TableHead className="w-[180px]">Дата</TableHead>
+                        <TableHead>Метр куб</TableHead>
                         <TableHead>Цена</TableHead>
                         <TableHead>Сумма</TableHead>
                         <TableHead>Размер бонуса %</TableHead>
                         <TableHead>Сумма бонуса</TableHead>
-                        <TableHead>Общие бонуса</TableHead>
-                        <TableHead className="text-right">Покупка за последние 5 дней</TableHead>
+                        <TableHead>Общие бонусы</TableHead>
+                        <TableHead className="text-right">Покупка за последние 7 дней</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody className='radius'>
@@ -52,12 +52,12 @@ const page = async ({ params: { id } }: { params: { id: string } }) => {
                             <TableRow key={el._id} className='border-none cursor-pointer'>
                                 <TableCell className="font-medium rounded-l-lg">{moment(car.data.history.createdAt).format('DD.MM.YY')}</TableCell>
                                 <TableCell>{el.volume}</TableCell>
-                                <TableCell>5 000</TableCell>
+                                <TableCell>{el.volumePrice}</TableCell>
                                 <TableCell>{el.price}</TableCell>
-                                <TableCell>{el.volume}</TableCell>
-                                <TableCell>{el.volume}</TableCell>
-                                <TableCell>{el.volume}</TableCell>
-                                <TableCell className="text-right rounded-r-lg">{el.volume}</TableCell>
+                                <TableCell>{el.bonusPercent}</TableCell>
+                                <TableCell>{el.bonusPricePerPurchase}</TableCell>
+                                <TableCell>{el.bonusPrice}</TableCell>
+                                <TableCell className="text-right rounded-r-lg">{el.allVolume}</TableCell>
                             </TableRow>
                         ))
                     }
