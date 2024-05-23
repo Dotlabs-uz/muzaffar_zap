@@ -30,7 +30,7 @@ const formSchema = z.object({
     autoNumber: z.string().min(8).max(8),
     fullName: z.string().min(1),
     phoneNumber: z.string().min(17),
-    type: z.string().min(1),
+    type: z.string().min(1, { message: "type is required" }),
 })
 
 const typesButtonArr = [

@@ -26,6 +26,7 @@ const Login: React.FC = () => {
     const [ISpandding, setISpandding] = useState(false);
     const { push } = useRouter()
     const [role, setRole] = useState("");
+    const [filedErr, setFiledErr] = useState("");
 
     const onSubmit: SubmitHandler<Inputs> = (data) => {
         setISpandding(true)
@@ -64,6 +65,9 @@ const Login: React.FC = () => {
                 }
             }).catch(err => {
                 setISpandding(false)
+                // console.log(err.response.data.message);
+
+                setFiledErr(err.response.data.message)
                 console.log(err)
             })
         // github_4             password
@@ -76,9 +80,11 @@ const Login: React.FC = () => {
                 <div className="mb-4">
                     <div className="flex items-center justify-between">
                         <label htmlFor="role" className="block text-gray-700 font-bold mb-2">Роль:</label>
-                        {
-                            role === "" ? "Выберите роль" : ""
-                        }
+                        <p className=''>
+                            {
+                                role === "" ? "Выберите роль" : ""
+                            }
+                        </p>
                     </div>
                     <Select onValueChange={(e) => setRole(e)} >
                         <SelectTrigger id='role'>
@@ -110,7 +116,11 @@ const Login: React.FC = () => {
                     />
                     {errors.login && <p className="text-red-500 text-xs italic">{errors.login.message}</p>}
                 </div>
+                <p className='text-center mb-2 text-red-500'>
+                    {filedErr}
+                </p>
                 <Button
+                    onClick={() => setFiledErr(role === "" ? "выберите роль" : "")}
                     disabled={ISpandding}
                     type="submit"
                     className="bg-blue-500 hover:bg-blue-700 text-white w-full font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"

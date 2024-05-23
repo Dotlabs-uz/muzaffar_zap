@@ -22,6 +22,7 @@ import Modal from '@/components/Modal';
 import axios from 'axios';
 import Link from 'next/link';
 import ModalSession from './ModalSession';
+import ExitModul from './ExitModul';
 
 type Inputs = {
     autoNumber: string;
@@ -39,7 +40,7 @@ const formSchema = z.object({
     isTaxi: z.string()
 })
 
-const Form = ({ token, role, operatorName , config}: any) => {
+const Form = ({ token, role, operatorName, config }: any) => {
     const { register, handleSubmit, reset, formState: { errors }, } = useForm<Inputs>();
     const [isPending, setIsPending] = useState(false);
     const [openModal, setOpenModal] = useState(false);
@@ -50,6 +51,7 @@ const Form = ({ token, role, operatorName , config}: any) => {
     const [changePrice, setChangePrice] = useState(0);
     const [payWithBonus, setPayWithBonus] = useState(false);
     const [closeSession, setCloseSession] = useState(false);
+    const [adminExit, setAdminExit] = useState(false);
 
     const bon = changeKub && bonus !== 0 ? bonus > changePrice ? changePrice : bonus : "0"
     const nal = changePrice > bonus ? changePrice - bonus : ""
@@ -123,6 +125,11 @@ const Form = ({ token, role, operatorName , config}: any) => {
                     <ModalSession setCloseSession={setCloseSession} />
                 )
             }
+            {
+                adminExit && (
+                    <ExitModul setAdminExit={setAdminExit} />
+                )
+            }
             <form className='flex flex-col h-full' onSubmit={handleSubmit(onSubmit)}>
                 <div className="w-full flex items-center justify-between gap-5 pt-9 pb-5 px-4 rounded-lg bg-[#121212]">
                     <p className="text-white">
@@ -160,7 +167,7 @@ const Form = ({ token, role, operatorName , config}: any) => {
                                 :
                                 <div className='flex items-center gap-3'>
                                     <Link href={"/admin"} className="bg-[#0f172a] hover:bg-[#15213a] py-2 px-4 rounded-lg duration-150 ease-in">super admin</Link>
-                                    <Button variant={'destructive'} className='h-fit'>Выйти</Button>
+                                    <Button type='button' onClick={() => setAdminExit(true)} variant={'destructive'} className='h-fit'>Выйти</Button>
                                 </div>
                         }
                     </div>
@@ -219,11 +226,11 @@ const Form = ({ token, role, operatorName , config}: any) => {
                                     <input disabled={isPending} value={"1"} type="radio" {...register("isTaxi", { required: true })} className={`hidden-radio ${errors.isTaxi && "animate-pulse"}`} />
                                     <span>Такси</span>
                                 </label>
-                                <label className={`radio-btn cursor-pointer ${errors.volume && "animate-pulse"}`}>
+                                <label className={`radio-btn cursor-pointer ${errors.isTaxi && "animate-pulse"}`}>
                                     <input disabled={isPending} value={"1"} type="radio" {...register("isTaxi", { required: true })} className={`hidden-radio ${errors.isTaxi && "animate-pulse"}`} />
                                     <span>Грузовые</span>
                                 </label>
-                                <label className={`radio-btn cursor-pointer ${errors.volume && "animate-pulse"}`}>
+                                <label className={`radio-btn cursor-pointer ${errors.isTaxi && "animate-pulse"}`}>
                                     <input disabled={isPending} value={"0"} type="radio" {...register("isTaxi", { required: true })} className={`hidden-radio ${errors.isTaxi && "animate-pulse"}`} />
                                     <span>Обычная</span>
                                 </label>
