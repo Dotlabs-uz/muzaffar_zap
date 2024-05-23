@@ -34,7 +34,7 @@ export default function () {
             price: data.price,
             column: data.column,
             bonusPrice: car.bonus,
-            allVolume: sumVolume,
+            allVolume: sumVolume + data.volume,
             bonusPercent: car.bonusPercent,
             bonusPricePerPurchase: 0,
             volumePrice: config.data[0].price
