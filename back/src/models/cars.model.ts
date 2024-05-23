@@ -16,6 +16,7 @@ export default function (app: Application): Model<any> {
         type: {type: Number, enum: [0, 1, 2], required: true},
         batteryPercent: {type: Number, required: false, default: 0},
         bonus: {type: Number, default: 0},
+        bonusPercent: {type: Number, default: 0},
         history: {
             type: Array,
             of: {

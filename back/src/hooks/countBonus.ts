@@ -1,5 +1,7 @@
 import {HookContext} from '@feathersjs/feathers';
 import {BadRequest} from '@feathersjs/errors';
+import carsModel from '../models/cars.model';
+import app from '../app';
 
 export default function () {
     return async (context: HookContext) => {
@@ -16,6 +18,7 @@ export default function () {
                 createdAt: {$gte: sevenDaysAgo}
             }
         });
+        const cars = await carsModel(app).findOne({});
 
         const sumVolume = purchases.data.reduce((acc: number, curr: any) => acc + +curr.volume, 0);
 
@@ -26,12 +29,12 @@ export default function () {
         else if (sumVolume > 600) bonus = 5;
 
         const price = data.price / 100 * bonus;
-
+        console.log(cars);
         const history = {
             volume: data.volume,
             price: data.price,
             column: data.column,
-            bonusPrice: price,
+            bonusPrice: cars.bonus + price,
             allVolume: sumVolume,
             bonusPercent: bonus
         };
@@ -40,7 +43,7 @@ export default function () {
             $push: {
                 history: history
             },
-            bonus: price,
+            bonus: cars.bonus + price,
             bonusPercent: bonus
         }, {query: {autoNumber: data.autoNumber}});
     };
