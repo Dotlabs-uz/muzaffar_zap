@@ -29,6 +29,16 @@ export default function () {
 
         const sumVolume = purchases.data.reduce((acc: number, curr: any) => acc + +curr.volume, 0);
 
+        if (context.data.price) {
+            let bonus = 0;
+
+            if (sumVolume <= 200) bonus = 2;
+            else if (sumVolume > 200 && sumVolume <= 600) bonus = 3;
+            else if (sumVolume > 600) bonus = 5;
+
+            context.data.price = data.price / 100 * bonus;
+        }
+
         const history = {
             volume: data.volume,
             price: data.price,
