@@ -52,8 +52,7 @@ export default {
                         login: operator.login
                     }
                 });
-            })
-        ],
+            })],
         update: [],
         patch: [],
         remove: []
