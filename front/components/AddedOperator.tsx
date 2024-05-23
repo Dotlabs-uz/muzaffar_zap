@@ -58,7 +58,7 @@ const AddedOperator = ({ token }: { token: string }) => {
                                     render={({ field }) => (
                                         <FormItem>
                                             <FormControl>
-                                                <Input disabled={!isOpen} autoComplete='off' placeholder="Ф.И.О" {...field} />
+                                                <Input autoComplete='off' placeholder="Ф.И.О" {...field} />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -70,7 +70,7 @@ const AddedOperator = ({ token }: { token: string }) => {
                                     render={({ field }) => (
                                         <FormItem>
                                             <FormControl>
-                                                <Input disabled={!isOpen} autoComplete='off' placeholder="Пароль" {...field} />
+                                                <Input autoComplete='off' placeholder="Пароль" {...field} />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -82,14 +82,14 @@ const AddedOperator = ({ token }: { token: string }) => {
                                     render={({ field }) => (
                                         <FormItem>
                                             <FormControl>
-                                                <Input disabled={!isOpen} autoComplete='off' placeholder="Логин" {...field} />
+                                                <Input autoComplete='off' placeholder="Логин" {...field} />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
                                     )}
                                 />
 
-                                <Button disabled={!isOpen} className='w-full'>Создать</Button>
+                                <Button className='w-full'>Создать</Button>
                             </form>
                         </Form>
                     </div>

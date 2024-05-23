@@ -29,7 +29,6 @@ const ModalSession = ({ setCloseSession }: any) => {
         })
     }
 
-
     return (
         <div onClick={() => setCloseSession(false)} className='fixed top-0 left-0 h-screen w-full bg-black/30 backdrop-blur-sm z-50'>
             <div onClick={(e) => e.stopPropagation()} className="max-w-xl w-full absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 px-8 py-9 rounded-lg bg-white">
