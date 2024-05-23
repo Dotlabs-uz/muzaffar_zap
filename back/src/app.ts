@@ -70,4 +70,5 @@ app.use(express.errorHandler({logger} as any));
 
 app.hooks(appHooks);
 
+app.settings.paginate.default = 20;
 export default app;
