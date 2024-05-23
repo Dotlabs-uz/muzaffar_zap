@@ -7,7 +7,7 @@ import moment from 'moment';
 
 const page = async ({ params: { id } }: { params: { id: string } }) => {
     const token = cookies().get("userToken")?.value
-    const car: any = await axios.get(`http://localhost:3030/cars/${id}`, { headers: { Authorization: token } })
+    const car: any = await axios.get(`${process.env.NEXT_PRODUTION_API_URL}/cars/${id}`, { headers: { Authorization: token } })
     console.log(car.data);
 
     return (

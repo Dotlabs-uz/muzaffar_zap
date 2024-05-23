@@ -7,7 +7,7 @@ export default function Layout({
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-    const token = cookies().get("userToken")?.value
+    const token = cookies().get("zapAdminToken")?.value
 
     if (!token) redirect("/log-in");
 

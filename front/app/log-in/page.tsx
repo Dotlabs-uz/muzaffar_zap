@@ -26,21 +26,44 @@ const Login: React.FC = () => {
     const [ISpandding, setISpandding] = useState(false);
     const { push } = useRouter()
     const [role, setRole] = useState("");
-    console.log(role);
 
     const onSubmit: SubmitHandler<Inputs> = (data) => {
         setISpandding(true)
-        axios.post(`http://localhost:3030/authentication/${role}`, { ...data, strategy: 'local' })
+        axios.post(`${process.env.NEXT_PRODUTION_API_URL}/authentication/${role}`, { ...data, strategy: 'local' })
             .then((res) => {
                 console.log(res);
                 if (res.status === 200 || res.status === 201) {
-
-                    setCookie('userToken', res.data.accessToken);
-                    push("/dashboard")
-                    setISpandding(true)
+                    if (res.data.admin) {
+                        setCookie('zapAdminToken', res.data.accessToken);
+                        setCookie('zapAdminRoleId', res.data.admin._id);
+                        setCookie('zapAdminRole', 'admin');
+                        setCookie('zapOperatorName', res.data.admin.login);
+                        push("/dashboard")
+                        setISpandding(false)
+                    } else {
+                        axios.post(`${process.env.NEXT_PRODUTION_API_URL}/sessions`, { active: true }, {
+                            headers: {
+                                Authorization: res.data.accessToken
+                            }
+                        }).then(response => {
+                            console.log(response.data, "dedede");
+                            if (response.status === 200 || response.status === 201) {
+                                setCookie("sessionId", response.data._id)
+                                setCookie("operatorLogin", response.data.operator.login)
+                                setCookie("createdAt", response.data.createdAt)
+                                
+                                setCookie('zapAdminToken', res.data.accessToken);
+                                setCookie('zapAdminRoleId', res.data.operator._id);
+                                setCookie('zapAdminRole', 'operator');
+                                setCookie('zapOperatorName', res.data.operator.fullName);
+                                push("/dashboard")
+                                setISpandding(false)
+                            }
+                        })
+                    }
                 }
             }).catch(err => {
-                setISpandding(true)
+                setISpandding(false)
                 console.log(err)
             })
         // github_4             password
