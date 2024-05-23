@@ -36,7 +36,7 @@ export default function () {
             else if (sumVolume > 200 && sumVolume <= 600) bonus = 3;
             else if (sumVolume > 600) bonus = 5;
 
-            context.data.price = data.price / 100 * bonus;
+            car.bonus = context.data.price / 100 * bonus;
         }
 
         const history = {
