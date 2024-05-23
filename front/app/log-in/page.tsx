@@ -29,7 +29,7 @@ const Login: React.FC = () => {
 
     const onSubmit: SubmitHandler<Inputs> = (data) => {
         setISpandding(true)
-        axios.post(`${process.env.NEXT_PRODUTION_API_URL}/authentication/${role}`, { ...data, strategy: 'local' })
+        axios.post(`${process.env.NEXT_PUBLIC_API_URL}/authentication/${role}`, { ...data, strategy: 'local' })
             .then((res) => {
                 console.log(res);
                 if (res.status === 200 || res.status === 201) {
@@ -41,7 +41,7 @@ const Login: React.FC = () => {
                         push("/dashboard")
                         setISpandding(false)
                     } else {
-                        axios.post(`${process.env.NEXT_PRODUTION_API_URL}/sessions`, { active: true }, {
+                        axios.post(`${process.env.NEXT_PUBLIC_API_URL}/sessions`, { active: true }, {
                             headers: {
                                 Authorization: res.data.accessToken
                             }
@@ -51,7 +51,7 @@ const Login: React.FC = () => {
                                 setCookie("sessionId", response.data._id)
                                 setCookie("operatorLogin", response.data.operator.login)
                                 setCookie("createdAt", response.data.createdAt)
-                                
+
                                 setCookie('zapAdminToken', res.data.accessToken);
                                 setCookie('zapAdminRoleId', res.data.operator._id);
                                 setCookie('zapAdminRole', 'operator');

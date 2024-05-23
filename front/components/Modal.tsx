@@ -68,7 +68,7 @@ const Modal = ({ setOpenModal, token }: any) => {
         }
 
         setLoading(true)
-        axios.post(`${process.env.NEXT_PRODUTION_API_URL}/cars`, data, {
+        axios.post(`${process.env.NEXT_PUBLIC_API_URL}/cars`, data, {
             headers: {
                 Authorization: token
             }

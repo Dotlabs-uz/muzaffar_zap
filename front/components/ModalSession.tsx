@@ -11,7 +11,7 @@ const ModalSession = ({ setCloseSession }: any) => {
     const token = getCookie("zapAdminToken")
 
     const updateSession = () => {
-        axios.patch(`${process.env.NEXT_PRODUTION_API_URL}/sessions/${sessionId}`, {
+        axios.patch(`${process.env.NEXT_PUBLIC_API_URL}/sessions/${sessionId}`, {
             active: false
         }, {
             headers: {
