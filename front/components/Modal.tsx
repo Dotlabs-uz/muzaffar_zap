@@ -30,7 +30,7 @@ const formSchema = z.object({
     autoNumber: z.string().min(8).max(8),
     fullName: z.string().min(1),
     phoneNumber: z.string().min(17),
-    type: z.string().min(1,),
+    type: z.string().min(1),
 })
 
 const typesButtonArr = [
@@ -66,7 +66,6 @@ const Modal = ({ setOpenModal, token }: any) => {
             ...values,
             type: +values.type
         }
-
 
         setLoading(true)
         axios.post("http://localhost:3030/cars", data, {
@@ -107,7 +106,7 @@ const Modal = ({ setOpenModal, token }: any) => {
                             render={({ field }) => (
                                 <FormItem>
                                     <FormControl>
-                                        <Input placeholder="number car" {...field} />
+                                        <Input autoComplete='off' className='uppercase' placeholder="number car" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -121,7 +120,7 @@ const Modal = ({ setOpenModal, token }: any) => {
                             render={({ field }) => (
                                 <FormItem>
                                     <FormControl>
-                                        <Input placeholder="Имя и Фамилия" {...field} />
+                                        <Input autoComplete='off' placeholder="Имя и Фамилия" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -137,6 +136,7 @@ const Modal = ({ setOpenModal, token }: any) => {
                                     <FormControl>
                                         {/* <Input placeholder="Номер телефона"  /> */}
                                         <InputMask
+                                            autoComplete='off'
                                             className='w-full py-2 px-2 text-base border rounded-md'
                                             mask="+\9\98(99)999-99-99"
                                             maskChar=""

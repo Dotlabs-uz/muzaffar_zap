@@ -24,6 +24,7 @@ import { Switch } from "@/components/ui/switch"
 import Modal from '@/components/Modal';
 import axios from 'axios';
 import ReactInputMask from 'react-input-mask';
+import Link from 'next/link';
 
 type Inputs = {
     autoNumber: string;
@@ -51,6 +52,9 @@ const Form = ({ token }: any) => {
     const [changeKub, setChangeKub] = useState(0);
     const [changePrice, setChangePrice] = useState(0);
     const [payWithBonus, setPayWithBonus] = useState(false);
+
+    const bon = changeKub && bonus !== 0 ? bonus > changePrice ? changePrice : bonus : "0"
+    const nal = changePrice > bonus ? changePrice - bonus : ""
 
     // const carNumberRegex = /\b(\d{1,2}[A-Z]\d{3}[A-Z]{2}|\d{5}[A-Z]{3})\b/g;
 
@@ -129,25 +133,29 @@ const Form = ({ token }: any) => {
                 )
             }
             <form className='flex flex-col h-full' onSubmit={handleSubmit(onSubmit)}>
-                <div className="w-full flex items-center justify-center gap-5 pt-9 pb-5 rounded-lg bg-[#121212]">
-                    <Input
-                        autoComplete='off'
-                        maxLength={8}
-                        disabled={isPending}
-                        onKeyUp={(e: any) => setSearch(e.target.value)}
-                        className={`max-w-3xl py-5 text-xl bg-[#242424] text-white ${errors.autoNumber && "border border-[red] outline-[red]"}`}
-                        {...register("autoNumber", { required: true })}
-                    />
-                    {
-                        !cars[0] ?
-                            <Button
-                                onClick={() => setOpenModal(true)}
-                                type='button'
-                                className="bg-green-700 hover:bg-green-600 text-2xl h-11"
-                            >+</Button>
-                            :
-                            null
-                    }
+                <div className="w-full flex items-center justify-between gap-5 pt-9 pb-5 px-4 rounded-lg bg-[#121212]">
+                    <div className=""></div>
+                    <div className="max-w-3xl w-full flex items-center gap-5">
+                        <Input
+                            autoComplete='off'
+                            maxLength={8}
+                            disabled={isPending}
+                            onKeyUp={(e: any) => setSearch(e.target.value)}
+                            className={`py-5 uppercase text-xl bg-[#242424] text-white ${errors.autoNumber && "border border-[red] outline-[red]"}`}
+                            {...register("autoNumber", { required: true })}
+                        />
+                        {
+                            !cars[0] ?
+                                <Button
+                                    onClick={() => setOpenModal(true)}
+                                    type='button'
+                                    className="bg-green-700 hover:bg-green-600 text-2xl h-11"
+                                >+</Button>
+                                :
+                                null
+                        }
+                    </div>
+                    <div className="text-white text-sm">super admin</div>
                 </div>
                 <ResizablePanelGroup direction="vertical" className="mt-3 text-white">
                     <ResizablePanel className='scroll h-fit p-4 mb-4 rounded-lg bg-[#121212]'>
@@ -161,19 +169,21 @@ const Form = ({ token }: any) => {
                                     <TableHead>Сумма бонуса</TableHead>
                                     <TableHead>Номер</TableHead>
                                     <TableHead className="text-right">Имя</TableHead>
+                                    <TableHead className="text-right">История</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody className='radius'>
                                 {
                                     cars.map((i: any, idx: number) => (
-                                        <TableRow key={idx} onClick={() => { reset({ autoNumber: i.autoNumber }), setBonus(i.boughtInWeek) }} className='border-none cursor-pointer'>
+                                        <TableRow key={idx} onClick={() => { reset({ autoNumber: i.autoNumber }), setBonus(i.bonus) }} className='border-none cursor-pointer'>
                                             <TableCell className="font-medium text-center rounded-l-lg">{idx + 1}</TableCell>
-                                            <TableCell className="font-medium">{i.autoNumber}</TableCell>
+                                            <TableCell className="font-medium uppercase">{i.autoNumber}</TableCell>
                                             <TableCell>{i.batteryPercent}</TableCell>
                                             <TableCell>{i.bonus}</TableCell>
                                             {/* <TableCell>{i.boughtInWeek}</TableCell> */}
                                             <TableCell>{i.phoneNumber}</TableCell>
-                                            <TableCell className="text-right rounded-r-lg">{i.fullName}</TableCell>
+                                            <TableCell className="text-right">{i.fullName}</TableCell>
+                                            <TableCell className="text-right rounded-r-lg"><Link href={`/${i._id}`} type='button' onClick={(e) => e.stopPropagation()}>открыть</Link></TableCell>
                                         </TableRow>
                                     ))
                                 }
@@ -239,20 +249,19 @@ const Form = ({ token }: any) => {
                                         value={changePrice}
                                     />
                                 </div>
-                                <div className="h-fit w-full flex gap-3 items-center justify-between mt-5">
-                                    {/* <div className="flex items-center justify-between mt-5">
-                                        <p className="text-nowrap text-lg font-medium">Цена:</p>
-                                        <hr className="w-[55%] border-dashed border-1 border-white" />
-                                        <p className="text-nowrap">100 000 Sum</p>
+                                <div className="h-fit w-full mt-5">
+                                    <p>bonus: {bonus}</p>
+                                    <div className="grid grid-cols-2 gap-3 h-fit items-center justify-between mt-2">
+                                        <Button disabled={isPending} onClick={() => setPayWithBonus(false)} type='submit' className="bg-green-700 hover:bg-green-600 w-full text-lg h-full py-1">{changePrice.toLocaleString()} налом</Button>
+                                        <Button disabled={isPending || bonus == 0} onClick={() => setPayWithBonus(true)} type='submit' className="bg-green-700 hover:bg-green-600 w-full text-lg h-full py-2 flex flex-col items-start">
+                                            <p>
+                                                {bon.toLocaleString()} с бонуса
+                                            </p>
+                                            <p>
+                                                {nal.toLocaleString()} {changePrice > bonus ? "нал" : ""}
+                                            </p>
+                                        </Button>
                                     </div>
-                                    <div className="flex items-center justify-between">
-                                        <p className="text-nowrap text-lg font-medium">Количество:</p>
-                                        <hr className="w-[55%] border-dashed border-1 border-white" />
-                                        <p>10 шт</p>
-                                    </div> */}
-
-                                    <Button disabled={isPending} onClick={() => setPayWithBonus(false)} type='submit' className="bg-green-700 hover:bg-green-600 w-full text-lg h-11">{changePrice.toLocaleString()}</Button>
-                                    <Button disabled={isPending || bonus == 0} onClick={() => setPayWithBonus(true)} type='submit' className="bg-green-700 hover:bg-green-600 w-full text-lg h-11">{changeKub ? bonus > changePrice ? changePrice : changePrice - bonus : "0"}</Button>
                                 </div>
                             </div>
                         </div>
