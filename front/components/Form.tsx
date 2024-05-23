@@ -25,6 +25,7 @@ import Modal from '@/components/Modal';
 import axios from 'axios';
 import ReactInputMask from 'react-input-mask';
 import Link from 'next/link';
+import ModalSession from './ModalSession';
 
 type Inputs = {
     autoNumber: string;
@@ -42,7 +43,7 @@ const formSchema = z.object({
     isTaxi: z.string()
 })
 
-const Form = ({ token }: any) => {
+const Form = ({ token, role, operatorName }: any) => {
     const { register, handleSubmit, reset, formState: { errors }, } = useForm<Inputs>();
     const [isPending, setIsPending] = useState(false);
     const [openModal, setOpenModal] = useState(false);
@@ -52,22 +53,10 @@ const Form = ({ token }: any) => {
     const [changeKub, setChangeKub] = useState(0);
     const [changePrice, setChangePrice] = useState(0);
     const [payWithBonus, setPayWithBonus] = useState(false);
+    const [closeSession, setCloseSession] = useState(false);
 
     const bon = changeKub && bonus !== 0 ? bonus > changePrice ? changePrice : bonus : "0"
     const nal = changePrice > bonus ? changePrice - bonus : ""
-
-    // const carNumberRegex = /\b(\d{1,2}[A-Z]\d{3}[A-Z]{2}|\d{5}[A-Z]{3})\b/g;
-
-    // const form = useForm<z.infer<typeof formSchema>>({
-    //     resolver: zodResolver(formSchema),
-    //     defaultValues: {
-    //         volume: "",
-    //         price: "",
-    //         autoNumber: "",
-    //         column: "",
-    //         isTaxi: ""
-    //     },
-    // })
 
     function onSubmit(data: z.infer<typeof formSchema>) {
         setIsPending(true)
@@ -80,7 +69,7 @@ const Form = ({ token }: any) => {
             useBonus: payWithBonus
         }
 
-        axios.post("http://localhost:3030/purchases", sendData, {
+        axios.post(`${process.env.NEXT_PRODUTION_API_URL}/purchases`, sendData, {
             headers: {
                 Authorization: token
             }
@@ -100,7 +89,7 @@ const Form = ({ token }: any) => {
     };
 
     useEffect(() => {
-        axios.get("http://localhost:3030/cars",
+        axios.get(`${process.env.NEXT_PRODUTION_API_URL}/cars`,
             {
                 headers: {
                     Authorization: token
@@ -132,9 +121,21 @@ const Form = ({ token }: any) => {
                     <Modal setOpenModal={setOpenModal} token={token} />
                 )
             }
+            {
+                closeSession && (
+                    <ModalSession setCloseSession={setCloseSession} />
+                )
+            }
             <form className='flex flex-col h-full' onSubmit={handleSubmit(onSubmit)}>
                 <div className="w-full flex items-center justify-between gap-5 pt-9 pb-5 px-4 rounded-lg bg-[#121212]">
-                    <div className=""></div>
+                    <p className="text-white">
+                        {
+                            role
+                        }:
+                        {
+                            operatorName.value
+                        }
+                    </p>
                     <div className="max-w-3xl w-full flex items-center gap-5">
                         <Input
                             autoComplete='off'
@@ -155,8 +156,15 @@ const Form = ({ token }: any) => {
                                 null
                         }
                     </div>
-                    <div className="text-white text-sm">super admin</div>
+                    <div className="text-white text-sm">
+                        {
+                            role === "operator"
+                                ? <Button type='button' onClick={() => setCloseSession(true)}>Завершить сессию</Button>
+                                : <Link href={"/admin"}>super admin</Link>
+                        }
+                    </div>
                 </div>
+
                 <ResizablePanelGroup direction="vertical" className="mt-3 text-white">
                     <ResizablePanel className='scroll h-fit p-4 mb-4 rounded-lg bg-[#121212]'>
                         <Table>
