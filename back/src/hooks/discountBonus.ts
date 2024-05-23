@@ -29,7 +29,7 @@ export default function () {
 
         const sumVolume = purchases.data.reduce((acc: number, curr: any) => acc + +curr.volume, 0);
 
-        if (context.data.price) {
+        if (context.data.price > 0) {
             let bonus = 0;
 
             if (sumVolume <= 200) bonus = 2;
