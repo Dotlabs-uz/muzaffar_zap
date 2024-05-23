@@ -69,7 +69,7 @@ const Form = ({ token, role, operatorName }: any) => {
             useBonus: payWithBonus
         }
 
-        axios.post(`${process.env.NEXT_PRODUTION_API_URL}/purchases`, sendData, {
+        axios.post(`${process.env.NEXT_PUBLIC_API_URL}/purchases`, sendData, {
             headers: {
                 Authorization: token
             }
@@ -89,7 +89,7 @@ const Form = ({ token, role, operatorName }: any) => {
     };
 
     useEffect(() => {
-        axios.get(`${process.env.NEXT_PRODUTION_API_URL}/cars`,
+        axios.get(`${process.env.NEXT_PUBLIC_API_URL}/cars`,
             {
                 headers: {
                     Authorization: token
@@ -160,7 +160,11 @@ const Form = ({ token, role, operatorName }: any) => {
                         {
                             role === "operator"
                                 ? <Button type='button' onClick={() => setCloseSession(true)}>Завершить сессию</Button>
-                                : <Link href={"/admin"}>super admin</Link>
+                                :
+                                <div className='flex items-center gap-3'>
+                                    <Link href={"/admin"}>super admin</Link>
+                                    <Button>Выйти</Button>
+                                </div>
                         }
                     </div>
                 </div>

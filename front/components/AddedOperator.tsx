@@ -28,13 +28,14 @@ const AddedOperator = ({ token }: { token: string }) => {
     })
 
     function onSubmit(values: z.infer<typeof formSchema>) {
-        axios.post(`${process.env.NEXT_PRODUTION_API_URL}/operators`, values, {
+        axios.post(`${process.env.NEXT_PUBLIC_API_URL}/operators`, values, {
             headers: {
                 Authorization: token
             }
         }).then((res) => {
             if (res.status === 200 || res.status === 201) {
                 console.log(res.data);
+                setIsOpen(false)
             }
         }).catch(err => console.log(err))
     }
@@ -57,7 +58,7 @@ const AddedOperator = ({ token }: { token: string }) => {
                                     render={({ field }) => (
                                         <FormItem>
                                             <FormControl>
-                                                <Input autoComplete='off' placeholder="Ф.И.О" {...field} />
+                                                <Input disabled={!isOpen} autoComplete='off' placeholder="Ф.И.О" {...field} />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -69,7 +70,7 @@ const AddedOperator = ({ token }: { token: string }) => {
                                     render={({ field }) => (
                                         <FormItem>
                                             <FormControl>
-                                                <Input autoComplete='off' placeholder="Пароль" {...field} />
+                                                <Input disabled={!isOpen} autoComplete='off' placeholder="Пароль" {...field} />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -81,14 +82,14 @@ const AddedOperator = ({ token }: { token: string }) => {
                                     render={({ field }) => (
                                         <FormItem>
                                             <FormControl>
-                                                <Input autoComplete='off' placeholder="Логин" {...field} />
+                                                <Input disabled={!isOpen} autoComplete='off' placeholder="Логин" {...field} />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
                                     )}
                                 />
 
-                                <Button className='w-full'>Создать</Button>
+                                <Button disabled={!isOpen} className='w-full'>Создать</Button>
                             </form>
                         </Form>
                     </div>

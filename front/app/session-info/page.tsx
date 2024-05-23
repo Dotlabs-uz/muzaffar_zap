@@ -19,7 +19,7 @@ const Page = () => {
     const [info, setInfo] = useState<any>()
 
     useEffect(() => {
-        axios.get(`${process.env.NEXT_PRODUTION_API_URL}/reports?operator.login=${operatorLogin}&createdAt[$gte]=${createdAt}&updatedAt[$lt]=${updatedAt}`, {
+        axios.get(`${process.env.NEXT_PUBLIC_API_URL}/reports?operator.login=${operatorLogin}&createdAt[$gte]=${createdAt}&updatedAt[$lt]=${updatedAt}`, {
             headers: {
                 Authorization: token
             }
@@ -45,7 +45,7 @@ const Page = () => {
     return (
         <div className='h-screen w-full z-50'>
             <div className="w-full px-8 py-9 rounded-lg">
-                <ul className="mb-5 pb-2 border-b">
+                {/* <ul className="mb-5 pb-2 border-b">
                     <li className="flex items-center justify-between">
                         <p>Что он сделал</p>
                         <p>{info.data[0].path}</p>
@@ -64,7 +64,7 @@ const Page = () => {
                             <p>{moment(info.data[0].operator.updatedAt).format('MM.YY')}</p>
                         </div>
                     </li>
-                </ul>
+                </ul> */}
 
                 <Table>
                     <TableHeader>
@@ -79,7 +79,7 @@ const Page = () => {
                     </TableHeader>
                     <TableBody className='radius'>
                         {
-                            info.data.slice(1).map((i: any) => (
+                            info.data.map((i: any) => (
                                 <TableRow className='border-none cursor-pointer'>
                                     <TableCell className="font-medium text-center rounded-l-lg">{i.path}</TableCell>
                                     <TableCell className="font-medium uppercase">{i.data.autoNumber}</TableCell>
