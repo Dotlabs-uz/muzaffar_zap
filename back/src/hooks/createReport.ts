@@ -2,7 +2,7 @@ import {HookContext} from '@feathersjs/feathers';
 import {NotAuthenticated} from '@feathersjs/errors';
 import {parseJwt} from '../utils/parseJWT';
 
-export default async function () {
+export default () => {
     return async (context: HookContext) => {
         const data = context.data;
 
