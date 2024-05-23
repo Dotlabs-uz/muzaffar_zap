@@ -21,9 +21,12 @@ export default function (app: Application): Model<any> {
         history: {
             type: Array,
             of: {
-                volume: {type: Number},
-                price: {type: Number},
+                volume: {type: Number, required: true},
+                price: {type: Number, required: true},
                 column: {type: Number, enum: [1, 2, 3, 4, 5, 6, 7, 8]},
+                bonusPercent: {type: Number, required: true},
+                bonusPrice: {type: Number, required: true},
+                allVolume: {type: Number, required: true},
                 createdAt: {
                     type: Date,
                     default: Date.now

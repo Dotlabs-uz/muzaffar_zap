@@ -28,6 +28,12 @@ export default function () {
 
         const price = data.price / 100 * bonus;
 
+        data.history = {
+            allVolume: sumVolume,
+            bonusPercent: bonus,
+            bonusPrice: price
+        };
+
         await context.app.service('cars').patch(null, {
             $inc: {
                 bonus: price
