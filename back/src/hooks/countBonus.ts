@@ -8,9 +8,10 @@ export default function () {
         const {data} = context;
 
         if (!data?.autoNumber || !data?.volume || !data?.price || !data?.column) throw new BadRequest('bad request check all fields');
+        const config = await context.app.service('config').find();
 
         const sevenDaysAgo = new Date();
-        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - config.data[0].days);
 
         const purchases = await context.app.service('purchases').find({
             query: {
@@ -29,14 +30,17 @@ export default function () {
         else if (sumVolume > 600) bonus = 5;
 
         const price = data.price / 100 * bonus;
-        console.log(cars);
+
+
         const history = {
             volume: data.volume,
             price: data.price,
             column: data.column,
             bonusPrice: cars.bonus + price,
             allVolume: sumVolume,
-            bonusPercent: bonus
+            bonusPricePerPurchase: price,
+            bonusPercent: bonus,
+            volumePrice: config.data[0].price
         };
 
         await context.app.service('cars').patch(null, {

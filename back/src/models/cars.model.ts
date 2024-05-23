@@ -26,6 +26,8 @@ export default function (app: Application): Model<any> {
                 bonusPercent: {type: Number, required: true, default: 0},
                 bonusPrice: {type: Number, required: true, default: 0},
                 allVolume: {type: Number, required: true},
+                bonusPricePerPurchase: {type: Number, required: true},
+                volumePrice: {type: Number, required: true},
                 createdAt: {
                     type: Date,
                     default: Date.now

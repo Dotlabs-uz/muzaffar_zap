@@ -7,6 +7,8 @@ export default function () {
         const car = await carsModel(app).findOne({query: {autoNumber: context.data.autoNumber}}).exec();
         const {data} = context;
 
+        const config = await context.app.service('config').find();
+
         if (context.data.price < car.bonus) {
             car.bonus = car.bonus - context.data.price;
             context.data.price = 0;
@@ -16,7 +18,7 @@ export default function () {
         }
 
         const sevenDaysAgo = new Date();
-        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - config.data.days);
 
         const purchases = await context.app.service('purchases').find({
             query: {
@@ -33,7 +35,9 @@ export default function () {
             column: data.column,
             bonusPrice: car.bonus,
             allVolume: sumVolume,
-            bonusPercent: car.bonusPercent
+            bonusPercent: car.bonusPercent,
+            bonusPricePerPurchase: 0,
+            volumePrice: config.data[0].price
         };
 
         await context.app.service('cars').patch(null, {
