@@ -24,7 +24,7 @@ export default {
         find: [],
         get: [],
         create: [
-            iff(context => !context.path.includes('authentication') || !context.path.includes('sessions'), async (context: HookContext) => {
+            iff(context => !context.path.includes('authentication') && !context.path.includes('sessions'), async (context: HookContext) => {
                 const auth: any = context.params.authentication;
 
                 if (!auth?.accessToken) {
