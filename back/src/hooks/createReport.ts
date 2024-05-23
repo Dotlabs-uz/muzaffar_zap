@@ -19,12 +19,12 @@ export default () => {
         try {
             operator = await context.app.service('operators').get(payload.sub);
         } catch (e) {
-            return;
+            operator = await context.app.service('admins').get(payload.sub);
         }
 
         data.operator = {
-            fullName: operator.fullName,
-            login: operator.login
+            fullName: operator?.fullName || 'admin',
+            login: operator?.login
         };
     };
 };
