@@ -18,7 +18,7 @@ export default function () {
         }
 
         const sevenDaysAgo = new Date();
-        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - config.data.days);
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - config.data[0].days);
 
         const purchases = await context.app.service('purchases').find({
             query: {
