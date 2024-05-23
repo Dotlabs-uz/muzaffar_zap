@@ -62,6 +62,7 @@ const Form = ({ token, role, operatorName }: any) => {
         setIsPending(true)
         const sendData = {
             ...data,
+            autoNumber: data.autoNumber.toUpperCase(),
             volume: Number(data.volume),
             column: Number(data.column),
             price: changePrice,
@@ -162,8 +163,8 @@ const Form = ({ token, role, operatorName }: any) => {
                                 ? <Button type='button' onClick={() => setCloseSession(true)}>Завершить сессию</Button>
                                 :
                                 <div className='flex items-center gap-3'>
-                                    <Link href={"/admin"}>super admin</Link>
-                                    <Button>Выйти</Button>
+                                    <Link href={"/admin"} className="bg-[#0f172a] hover:bg-[#15213a] py-2 px-4 rounded-lg duration-150 ease-in">super admin</Link>
+                                    <Button variant={'destructive'} className='h-fit'>Выйти</Button>
                                 </div>
                         }
                     </div>
