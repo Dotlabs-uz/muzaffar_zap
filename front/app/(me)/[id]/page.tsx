@@ -4,9 +4,11 @@ import axios from "axios"
 import { cookies } from "next/headers";
 import { useEffect } from "react"
 import moment from 'moment';
+import { getData } from "@/lib/https";
 
 const page = async ({ params: { id } }: { params: { id: string } }) => {
     const token = cookies().get("userToken")?.value
+    const config = await getData("/config")
     const car: any = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/cars/${id}`, { headers: { Authorization: token } })
     console.log(car.data);
 
@@ -43,7 +45,7 @@ const page = async ({ params: { id } }: { params: { id: string } }) => {
                         <TableHead>Размер бонуса %</TableHead>
                         <TableHead>Сумма бонуса</TableHead>
                         <TableHead>Общие бонусы</TableHead>
-                        <TableHead className="text-right">Покупка за последние 7 дней</TableHead>
+                        <TableHead className="text-right">Покупка за последние {config.data[0].days} дней</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody className='radius'>

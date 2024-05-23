@@ -1,7 +1,6 @@
 "use client"
 import React, { useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form';
-import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -19,11 +18,8 @@ import {
     ResizablePanel,
     ResizablePanelGroup,
 } from "@/components/ui/resizable"
-import { Label } from "@/components/ui/label"
-import { Switch } from "@/components/ui/switch"
 import Modal from '@/components/Modal';
 import axios from 'axios';
-import ReactInputMask from 'react-input-mask';
 import Link from 'next/link';
 import ModalSession from './ModalSession';
 
@@ -43,7 +39,7 @@ const formSchema = z.object({
     isTaxi: z.string()
 })
 
-const Form = ({ token, role, operatorName }: any) => {
+const Form = ({ token, role, operatorName , config}: any) => {
     const { register, handleSubmit, reset, formState: { errors }, } = useForm<Inputs>();
     const [isPending, setIsPending] = useState(false);
     const [openModal, setOpenModal] = useState(false);
@@ -112,7 +108,7 @@ const Form = ({ token, role, operatorName }: any) => {
 
     function changeKubFn(v: number) {
         setChangeKub(v)
-        setChangePrice((v * 5000))
+        setChangePrice((v * config.price))
     }
 
     return (
@@ -247,8 +243,7 @@ const Form = ({ token, role, operatorName }: any) => {
                                     <Input
                                         className="w-full h-full text-2xl px-5 bg-[#242424] text-white"
                                         type="text"
-                                        // onKeyUpCapture={(e: any) => changePriceFn(+e.target.value)}
-                                        defaultValue={"5 000"}
+                                        defaultValue={config.price}
                                         placeholder="Sum"
                                     />
 
