@@ -31,13 +31,14 @@ export default function () {
             volume: data.volume,
             price: data.price,
             column: data.column,
-            bonusPrice: 0,
+            bonusPrice: car.bonus,
             allVolume: sumVolume,
-            bonusPercent: 0
+            bonusPercent: car.bonusPercent
         };
 
         await context.app.service('cars').patch(null, {
             bonus: car.bonus,
+            bonusPercent: car.bonusPercent,
             $push: {
                 history: history
             }

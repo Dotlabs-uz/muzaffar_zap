@@ -40,7 +40,8 @@ export default function () {
             $push: {
                 history: history
             },
-            bonus: bonus
+            bonus: price,
+            bonusPercent: bonus
         }, {query: {autoNumber: data.autoNumber}});
     };
 }
