@@ -181,7 +181,6 @@ const Form = ({ token, role, operatorName, config }: any) => {
                                     <TableHead className="w-[100px] text-center">numbers</TableHead>
                                     <TableHead className="w-[180px]">Номер машины</TableHead>
                                     <TableHead>Status</TableHead>
-                                    {/* <TableHead>Bonus</TableHead> */}
                                     <TableHead>Сумма бонуса</TableHead>
                                     <TableHead>Номер</TableHead>
                                     <TableHead className="text-right">Имя</TableHead>
@@ -196,7 +195,6 @@ const Form = ({ token, role, operatorName, config }: any) => {
                                             <TableCell className="font-medium uppercase">{i.autoNumber}</TableCell>
                                             <TableCell>{i.batteryPercent}</TableCell>
                                             <TableCell>{i.bonus}</TableCell>
-                                            {/* <TableCell>{i.boughtInWeek}</TableCell> */}
                                             <TableCell>{i.phoneNumber}</TableCell>
                                             <TableCell className="text-right">{i.fullName}</TableCell>
                                             <TableCell className="text-right rounded-r-lg"><Link href={`/${i._id}`} type='button' onClick={(e) => e.stopPropagation()}>открыть</Link></TableCell>
@@ -250,7 +248,7 @@ const Form = ({ token, role, operatorName, config }: any) => {
                                     <Input
                                         className="w-full h-full text-2xl px-5 bg-[#242424] text-white"
                                         type="text"
-                                        defaultValue={config.price}
+                                        value={config.price}
                                         placeholder="Sum"
                                     />
 
@@ -258,7 +256,6 @@ const Form = ({ token, role, operatorName, config }: any) => {
                                         className="w-full h-full text-2xl px-5 bg-[#242424] text-white"
                                         type="number"
                                         disabled={isPending}
-                                        // onKeyUpCapture={(e: any) => changePriceFn(+e.target.value)}
                                         {...register("price", { required: true })}
                                         placeholder="Sum"
                                         value={changePrice}

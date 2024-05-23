@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button'
+
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import axios from 'axios'
 import moment from 'moment'
@@ -9,7 +9,6 @@ import React from 'react'
 const page = async ({ params: { operatorLogin } }: { params: { operatorLogin: string } }) => {
     const token = cookies().get("zapAdminToke")?.value
     const sessions = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/sessions?operator.login=${operatorLogin}`, { headers: { Authorization: token } })
-    // console.log(sessions.data.data);
 
     return (
         <div className="h-screen bg-black overflow-auto px-3 py-5 text-white">
