@@ -53,7 +53,7 @@ export default function () {
         };
 
         await context.app.service('cars').patch(null, {
-            bonus: car.bonus,
+            bonus: car.bonus + bonusPer,
             bonusPercent: car.bonusPercent,
             $push: {
                 history: history
