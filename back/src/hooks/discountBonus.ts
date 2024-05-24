@@ -45,10 +45,10 @@ export default function () {
             volume: data.volume,
             price: data.price,
             column: data.column,
-            bonusPrice: car.bonus + bonusPer,
+            bonusPrice: Math.round(car.bonus + bonusPer),
             allVolume: sumVolume + data.volume,
             bonusPercent: car.bonusPercent,
-            bonusPricePerPurchase: bonusPer,
+            bonusPricePerPurchase: Math.round(bonusPer),
             volumePrice: config.data[0].price
         };
 

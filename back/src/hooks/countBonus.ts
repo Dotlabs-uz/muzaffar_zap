@@ -35,9 +35,9 @@ export default function () {
             volume: data.volume,
             price: data.price,
             column: data.column,
-            bonusPrice: cars.bonus + price,
+            bonusPrice: Math.round(cars.bonus + price),
             allVolume: sumVolume + data.volume,
-            bonusPricePerPurchase: price,
+            bonusPricePerPurchase: Math.round(price),
             bonusPercent: bonus,
             volumePrice: config.data[0].price
         };
