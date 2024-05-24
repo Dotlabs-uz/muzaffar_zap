@@ -2,7 +2,6 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import axios from "axios"
 import { cookies } from "next/headers";
-import { useEffect } from "react"
 import moment from 'moment';
 import { getData } from "@/lib/https";
 
@@ -13,7 +12,7 @@ const page = async ({ params: { id } }: { params: { id: string } }) => {
     console.log(car.data);
 
     return (
-        <div className="w-full h-screen px-3 pt-5 text-white bg-black">
+        <div className="w-full min-h-screen px-3 pt-5 text-white bg-black">
             <Table>
                 <TableHeader>
                     <TableRow className='border-b hover:bg-transparent select-none border-white/20'>

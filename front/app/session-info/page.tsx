@@ -1,5 +1,6 @@
 "use client"
 
+import { deleteAllCookies } from "@/actions/action"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import axios from "axios"
 import { deleteCookie, getCookie } from "cookies-next"
@@ -25,11 +26,9 @@ const Page = () => {
             }
         }).then(res => {
             if (res.status === 201 || res.status === 200) {
-                deleteCookie("operatorLogin")
-                deleteCookie("createdAt")
-                deleteCookie("updatedAt")
-                deleteCookie("zapAdminToken")
                 setInfo(res.data)
+                deleteAllCookies()
+                
             }
         }).catch(err => {
             push("log-in")
