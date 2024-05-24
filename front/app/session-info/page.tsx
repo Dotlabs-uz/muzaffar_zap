@@ -1,5 +1,6 @@
 "use client"
 
+import { deleteAllCookies } from "@/actions/action"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import axios from "axios"
 import { deleteCookie, getCookie } from "cookies-next"
@@ -25,11 +26,9 @@ const Page = () => {
             }
         }).then(res => {
             if (res.status === 201 || res.status === 200) {
-                deleteCookie("operatorLogin")
-                deleteCookie("createdAt")
-                deleteCookie("updatedAt")
-                deleteCookie("zapAdminToken")
                 setInfo(res.data)
+                deleteAllCookies()
+                
             }
         }).catch(err => {
             push("log-in")
@@ -80,7 +79,7 @@ const Page = () => {
                     <TableBody className='radius'>
                         {
                             info.data.map((i: any) => (
-                                <TableRow className='border-none cursor-pointer'>
+                                <TableRow key={i.id} className='border-none cursor-pointer'>
                                     <TableCell className="font-medium text-center rounded-l-lg">{i.path}</TableCell>
                                     <TableCell className="font-medium uppercase">{i.data.autoNumber}</TableCell>
                                     <TableCell>{i.data.column}</TableCell>

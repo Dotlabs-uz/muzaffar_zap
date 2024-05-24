@@ -33,7 +33,7 @@ const page = async ({ params: { operatorLogin }, searchParams: { createdAt, upda
                 <TableBody className='radius'>
                     {
                         reports.data.data.map((i: any) => (
-                            <TableRow className='border-none cursor-pointer'>
+                            <TableRow key={i.id} className='border-none cursor-pointer'>
                                 <TableCell className="rounded-l-lg">{i.data.volume}</TableCell>
                                 <TableCell>{i.data.autoNumber}</TableCell>
                                 <TableCell>{i.data.price}</TableCell>

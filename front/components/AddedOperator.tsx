@@ -10,13 +10,14 @@ import { Button } from './ui/button'
 import axios from 'axios'
 
 const formSchema = z.object({
-    fullName: z.string().min(2),
-    password: z.string(),
-    login: z.string()
+    fullName: z.string().min(1, { message: "Full name is required" }),
+    password: z.string().min(1, { message: "Password is required" }),
+    login: z.string().min(1, { message: "Log in is required" })
 })
 
 const AddedOperator = ({ token }: { token: string }) => {
     const [isOpen, setIsOpen] = useState(false);
+    const [filedErr, setFiledErr] = useState("");
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -37,7 +38,9 @@ const AddedOperator = ({ token }: { token: string }) => {
                 console.log(res.data);
                 setIsOpen(false)
             }
-        }).catch(err => console.log(err))
+        }).catch(err => {
+            console.log(err)
+        })
     }
 
     return (

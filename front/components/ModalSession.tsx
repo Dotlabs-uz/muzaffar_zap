@@ -3,6 +3,7 @@ import { deleteCookie, getCookie, setCookie } from "cookies-next"
 import { Button } from "./ui/button"
 import { useRouter } from "next/navigation"
 import axios from "axios"
+import action from "@/actions/action"
 
 const ModalSession = ({ setCloseSession }: any) => {
     const { push } = useRouter()
@@ -24,6 +25,7 @@ const ModalSession = ({ setCloseSession }: any) => {
                 deleteCookie('zapAdminRoleId')
                 deleteCookie('zapOperatorName')
                 setCookie("updatedAt", res.data.updatedAt)
+                // action("/sessions")
                 push("/session-info")
             }
         })

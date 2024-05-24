@@ -1,7 +1,6 @@
 "use client"
 import React, { useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form';
-import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -19,13 +18,11 @@ import {
     ResizablePanel,
     ResizablePanelGroup,
 } from "@/components/ui/resizable"
-import { Label } from "@/components/ui/label"
-import { Switch } from "@/components/ui/switch"
 import Modal from '@/components/Modal';
 import axios from 'axios';
-import ReactInputMask from 'react-input-mask';
 import Link from 'next/link';
 import ModalSession from './ModalSession';
+import ExitModul from './ExitModul';
 
 type Inputs = {
     autoNumber: string;
@@ -43,7 +40,7 @@ const formSchema = z.object({
     isTaxi: z.string()
 })
 
-const Form = ({ token, role, operatorName }: any) => {
+const Form = ({ token, role, operatorName, config }: any) => {
     const { register, handleSubmit, reset, formState: { errors }, } = useForm<Inputs>();
     const [isPending, setIsPending] = useState(false);
     const [openModal, setOpenModal] = useState(false);
@@ -54,6 +51,7 @@ const Form = ({ token, role, operatorName }: any) => {
     const [changePrice, setChangePrice] = useState(0);
     const [payWithBonus, setPayWithBonus] = useState(false);
     const [closeSession, setCloseSession] = useState(false);
+    const [adminExit, setAdminExit] = useState(false);
 
     const bon = changeKub && bonus !== 0 ? bonus > changePrice ? changePrice : bonus : "0"
     const nal = changePrice > bonus ? changePrice - bonus : ""
@@ -112,7 +110,7 @@ const Form = ({ token, role, operatorName }: any) => {
 
     function changeKubFn(v: number) {
         setChangeKub(v)
-        setChangePrice((v * 5000))
+        setChangePrice((v * config.price))
     }
 
     return (
@@ -125,6 +123,11 @@ const Form = ({ token, role, operatorName }: any) => {
             {
                 closeSession && (
                     <ModalSession setCloseSession={setCloseSession} />
+                )
+            }
+            {
+                adminExit && (
+                    <ExitModul setAdminExit={setAdminExit} />
                 )
             }
             <form className='flex flex-col h-full' onSubmit={handleSubmit(onSubmit)}>
@@ -164,7 +167,7 @@ const Form = ({ token, role, operatorName }: any) => {
                                 :
                                 <div className='flex items-center gap-3'>
                                     <Link href={"/admin"} className="bg-[#0f172a] hover:bg-[#15213a] py-2 px-4 rounded-lg duration-150 ease-in">super admin</Link>
-                                    <Button variant={'destructive'} className='h-fit'>Выйти</Button>
+                                    <Button type='button' onClick={() => setAdminExit(true)} variant={'destructive'} className='h-fit'>Выйти</Button>
                                 </div>
                         }
                     </div>
@@ -178,7 +181,6 @@ const Form = ({ token, role, operatorName }: any) => {
                                     <TableHead className="w-[100px] text-center">numbers</TableHead>
                                     <TableHead className="w-[180px]">Номер машины</TableHead>
                                     <TableHead>Status</TableHead>
-                                    {/* <TableHead>Bonus</TableHead> */}
                                     <TableHead>Сумма бонуса</TableHead>
                                     <TableHead>Номер</TableHead>
                                     <TableHead className="text-right">Имя</TableHead>
@@ -193,7 +195,6 @@ const Form = ({ token, role, operatorName }: any) => {
                                             <TableCell className="font-medium uppercase">{i.autoNumber}</TableCell>
                                             <TableCell>{i.batteryPercent}</TableCell>
                                             <TableCell>{i.bonus}</TableCell>
-                                            {/* <TableCell>{i.boughtInWeek}</TableCell> */}
                                             <TableCell>{i.phoneNumber}</TableCell>
                                             <TableCell className="text-right">{i.fullName}</TableCell>
                                             <TableCell className="text-right rounded-r-lg"><Link href={`/${i._id}`} type='button' onClick={(e) => e.stopPropagation()}>открыть</Link></TableCell>
@@ -223,11 +224,11 @@ const Form = ({ token, role, operatorName }: any) => {
                                     <input disabled={isPending} value={"1"} type="radio" {...register("isTaxi", { required: true })} className={`hidden-radio ${errors.isTaxi && "animate-pulse"}`} />
                                     <span>Такси</span>
                                 </label>
-                                <label className={`radio-btn cursor-pointer ${errors.volume && "animate-pulse"}`}>
+                                <label className={`radio-btn cursor-pointer ${errors.isTaxi && "animate-pulse"}`}>
                                     <input disabled={isPending} value={"1"} type="radio" {...register("isTaxi", { required: true })} className={`hidden-radio ${errors.isTaxi && "animate-pulse"}`} />
                                     <span>Грузовые</span>
                                 </label>
-                                <label className={`radio-btn cursor-pointer ${errors.volume && "animate-pulse"}`}>
+                                <label className={`radio-btn cursor-pointer ${errors.isTaxi && "animate-pulse"}`}>
                                     <input disabled={isPending} value={"0"} type="radio" {...register("isTaxi", { required: true })} className={`hidden-radio ${errors.isTaxi && "animate-pulse"}`} />
                                     <span>Обычная</span>
                                 </label>
@@ -247,8 +248,7 @@ const Form = ({ token, role, operatorName }: any) => {
                                     <Input
                                         className="w-full h-full text-2xl px-5 bg-[#242424] text-white"
                                         type="text"
-                                        // onKeyUpCapture={(e: any) => changePriceFn(+e.target.value)}
-                                        defaultValue={"5 000"}
+                                        value={config.price}
                                         placeholder="Sum"
                                     />
 
@@ -256,7 +256,6 @@ const Form = ({ token, role, operatorName }: any) => {
                                         className="w-full h-full text-2xl px-5 bg-[#242424] text-white"
                                         type="number"
                                         disabled={isPending}
-                                        // onKeyUpCapture={(e: any) => changePriceFn(+e.target.value)}
                                         {...register("price", { required: true })}
                                         placeholder="Sum"
                                         value={changePrice}

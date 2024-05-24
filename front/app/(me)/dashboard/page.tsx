@@ -1,16 +1,18 @@
-import { cookies } from 'next/headers';
-import Form from '@/components/Form';
+import DashboardContainer from "@/components/containers/DashboardContainer";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+import { Suspense } from "react";
 
-const Page = () => {    
-    const token = cookies().get("zapAdminToken")?.value
-    const role = cookies().get("zapAdminRole")?.value
-    const operatorName = cookies().get("zapOperatorName")
+const Page = async () => {
+    const token = cookies().get("zapAdminToken")?.value;
 
+    if (!token) redirect("/log-in");
+    
     return (
-        <>
-            <Form token={token} role={role} operatorName={operatorName} />
-        </>
+        <Suspense fallback={<p>Loading...</p>}>
+            <DashboardContainer />
+        </Suspense>
     );
-}
+};
 
-export default Page
+export default Page;
