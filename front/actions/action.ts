@@ -13,4 +13,3 @@ export async function deleteAllCookies() {
     cookies().delete("updatedAt")
     cookies().delete("zapAdminToken")
 }
-
