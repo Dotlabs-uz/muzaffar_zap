@@ -28,7 +28,7 @@ const page = async () => {
 
             <div className="mt-10 grid grid-cols-3 gap-3">
                 {operators.data.data.map((operator: any) => (
-                    <Operator operator={operator} token={token} />
+                    <Operator key={operator.id} operator={operator} token={token} />
                 ))}
             </div>
         </div>

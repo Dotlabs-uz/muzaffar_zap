@@ -24,7 +24,7 @@ const page = async ({ params: { operatorLogin } }: { params: { operatorLogin: st
                 <TableBody className='radius'>
                     {
                         sessions.data.data.map((i: any) => (
-                            <TableRow className='border-none cursor-pointer'>
+                            <TableRow key={i.id} className='border-none cursor-pointer'>
                                 <TableCell className='rounded-l-lg'>
                                     <p>{moment(i.createdAt).format('DD.MM.YY')}</p>
                                     <p>{moment(i.createdAt).format('HH.MM')}</p>

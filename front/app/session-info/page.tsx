@@ -79,7 +79,7 @@ const Page = () => {
                     <TableBody className='radius'>
                         {
                             info.data.map((i: any) => (
-                                <TableRow className='border-none cursor-pointer'>
+                                <TableRow key={i.id} className='border-none cursor-pointer'>
                                     <TableCell className="font-medium text-center rounded-l-lg">{i.path}</TableCell>
                                     <TableCell className="font-medium uppercase">{i.data.autoNumber}</TableCell>
                                     <TableCell>{i.data.column}</TableCell>
