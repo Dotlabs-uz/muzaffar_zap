@@ -54,7 +54,7 @@ const Form = ({ token, role, operatorName, config }: any) => {
     const [adminExit, setAdminExit] = useState(false);
 
     const bon = changeKub && bonus !== 0 ? bonus > changePrice ? changePrice : bonus : "0"
-    const nal = changePrice > bonus ? changePrice - bonus : ""
+    const nal = changePrice > bonus ? changePrice - bonus : changePrice
 
     function onSubmit(data: z.infer<typeof formSchema>) {
         setIsPending(true)
@@ -166,7 +166,7 @@ const Form = ({ token, role, operatorName, config }: any) => {
                                 ? <Button type='button' onClick={() => setCloseSession(true)}>Завершить сессию</Button>
                                 :
                                 <div className='flex items-center gap-3'>
-                                    <Link href={"/admin"} className="bg-[#0f172a] hover:bg-[#15213a] py-2 px-4 rounded-lg duration-150 ease-in">super admin</Link>
+                                    <Link href={"/admin"} className="bg-[#0f172a] hover:bg-[#15213a] py-2 px-4 rounded-lg duration-150 ease-in">Отчеты</Link>
                                     <Button type='button' onClick={() => setAdminExit(true)} variant={'destructive'} className='h-fit'>Выйти</Button>
                                 </div>
                         }
@@ -266,9 +266,9 @@ const Form = ({ token, role, operatorName, config }: any) => {
                                     <div className="grid grid-cols-2 gap-3 h-fit items-center justify-between mt-2">
                                         <Button disabled={isPending} onClick={() => setPayWithBonus(false)} type='submit' className="bg-green-700 hover:bg-green-600 w-full text-lg h-full py-1">{changePrice.toLocaleString()} налом</Button>
                                         <Button disabled={isPending || bonus == 0} onClick={() => setPayWithBonus(true)} type='submit' className="bg-green-700 hover:bg-green-600 w-full text-lg h-full py-2 flex flex-col items-start">
-                                            <p>
+                                            {/* <p>
                                                 {bon.toLocaleString()} с бонуса
-                                            </p>
+                                            </p> */}
                                             <p>
                                                 {nal.toLocaleString()} {changePrice > bonus ? "нал" : ""}
                                             </p>
