@@ -19,8 +19,14 @@ export default function () {
                 createdAt: {$gte: sevenDaysAgo}
             }
         });
-        const cars = await carsModel(app).findOne({});
+        const cars = await carsModel(app).findOne({
+                autoNumber: context.data.autoNumber
+        });
 
+         console.log(cars);
+         console.log(context.data.autoNumber);
+         
+         
         const sumVolume = purchases.data.reduce((acc: number, curr: any) => acc + +curr.volume, 0);
 
         let bonus = 0;
